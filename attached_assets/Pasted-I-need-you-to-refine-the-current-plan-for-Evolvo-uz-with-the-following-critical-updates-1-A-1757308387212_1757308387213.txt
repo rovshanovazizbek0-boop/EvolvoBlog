@@ -1,0 +1,35 @@
+I need you to refine the current plan for "Evolvo.uz" with the following critical updates:
+
+1. **Admin Panel Visibility**: The admin panel must be accessible only via login and hidden from public view. It should not appear in the main navigation for regular users. Only authenticated admins can access /admin/dashboard, /admin/login, etc.
+
+2. **Image Uniqueness**: Implement strict 90-day uniqueness tracking for Unsplash images. Store the image ID in the database and check before fetching a new image. If the same image ID exists within the last 90 days, fetch a different one.
+
+3. **Content Focus**: The blog content must focus on the following topics:
+   - AI tools and automation
+   - Telegram bots and chatbots
+   - Web development and programming
+   - Marketing automation
+   - Productivity hacks
+   - AI prompts and workflows
+   - O'zbekiston bo'yicha innovatsiyalar
+
+4. **SEO & Language**: All posts must be in Uzbek language. Use proper SEO meta tags (title, description, keywords) and Open Graph tags for social sharing.
+
+5. **Telegram Integration**: Automatically post to Telegram channel at scheduled times (07:00, 09:00, ..., 19:00). Include post title, excerpt, link, and hashtags.
+
+6. **Public Interface**: The main site should have:
+   - A clean, modern design
+   - A sticky banner at the top: "Telegram kanalimizga obuna bo'ling va yangiliklardan birinchi xabar oling!" with a button "Obuna bo'lish"
+   - Blog listing page with featured image, title, excerpt, and read time
+   - Individual post pages with full content, related posts, and CTA to Telegram
+
+7. **Cron Scheduler**: Run daily post generation at 23:00 (Tashkent time) using setInterval. Generate 7 unique posts for the next day.
+
+8. **Database Schema**: Use PostgreSQL with a `posts` table including:
+   - id, title, slug, content, meta_description, keywords, image_url, image_unsplash_id, published_at, status (scheduled/published), created_at
+
+9. **Authentication**: Use Replit Auth or custom login system for admin access only.
+
+10. **Tech Stack**: React + Express + PostgreSQL + OpenAI/Gemini API + Unsplash API + Telegram Bot API
+
+Update the plan accordingly and ensure all features are implemented correctly.

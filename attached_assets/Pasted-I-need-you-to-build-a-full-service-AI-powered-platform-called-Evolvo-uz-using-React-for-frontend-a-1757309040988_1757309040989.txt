@@ -1,0 +1,56 @@
+I need you to build a full-service AI-powered platform called "Evolvo.uz" using React for frontend and Express.js for backend with PostgreSQL database. Our company provides the following services: website development, Telegram bot creation, chatbot development, and business automation.
+
+The platform must include:
+
+1. 🌐 PUBLIC FRONTEND (React):
+   - Home page: hero section, services overview, Telegram banner (sticky top: "Telegram botimiz orqali AI yordamida xizmat tanlang → @evolvobot")
+   - Services page: grid of 4 services (Websites, Telegram Bots, Chatbots, Automation) — each with title, price range, duration, image, and "Learn More" button
+   - Service Detail page: for each service, show detailed description, features, pricing tiers, and an AI assistant that asks questions to customize the offer (e.g., "What functions should your Telegram bot have?")
+   - Order Form page: form to submit order (name, phone, Telegram username, service details, budget, deadline) — after submission, send confirmation via Telegram bot
+   - Blog page: list of AI-generated blog posts (marketing content) — same as before (7 posts/day, Unsplash images, Telegram auto-post)
+
+2. 🤖 BACKEND (Express.js):
+   - /api/services — GET all services, GET by ID
+   - /api/order — POST to submit order → save to DB → send Telegram notification to client and admin
+   - /api/ai/explain — POST { serviceId, question } → AI returns customized explanation using Gemini API
+   - /api/blog — same as before (generate daily posts, publish to Telegram)
+
+3. 👨‍💼 ADMIN PANEL (protected routes):
+   - /admin/login — email/password login (store hashed passwords)
+   - /admin/dashboard — list of all orders (client, service, status, date), ability to change status (New → In Progress → Completed)
+   - /admin/services — manage services (add/edit/delete — title, description, price, image, AI prompt template)
+   - /admin/clients — CRM view of clients (name, Telegram, order history, notes)
+
+4. 🧠 AI INTEGRATION:
+   - Use Google Gemini 1.5 Flash API
+   - For each service, store an "AI prompt template" in DB — e.g., "Client is interested in {service}. Ask 3 questions to customize their offer."
+   - When user visits service detail page, AI assistant greets them and asks questions based on template
+   - AI responses must be in Uzbek language
+
+5. 📱 TELEGRAM INTEGRATION:
+   - After order submission, send message to client: "Buyurtmangiz qabul qilindi! Tez orada siz bilan bog‘lanamiz. — Evolvo.uz"
+   - Also notify admin channel: "Yangi buyurtma: {service} — @{telegram_username}"
+   - Use same Telegram bot as blog auto-poster
+
+6. 🖼 MEDIA & SEO:
+   - Each service has unique image (store image URL in DB)
+   - Each service page has SEO meta tags (title, description) and Open Graph tags
+   - Blog posts same as before (Unsplash images, no repeats in 90 days)
+
+7. 🗃 DATABASE (PostgreSQL):
+   - Table: services (id, title, description, price_range, duration, image_url, ai_prompt_template, created_at)
+   - Table: orders (id, client_name, phone, telegram_username, service_id, details, budget, deadline, status, created_at)
+   - Table: blog_posts (same as before)
+   - Table: users (for admin login)
+
+8. ⚙️ TECH STACK:
+   - Frontend: React + Vite + Tailwind CSS
+   - Backend: Express.js
+   - Database: PostgreSQL (Replit DB or Supabase)
+   - Auth: Custom login (bcrypt)
+   - AI: Google Gemini 1.5 Flash
+   - Images: Unsplash API (for blog only)
+   - Telegram: Telegram Bot API
+   - Hosting: Replit (full-stack)
+
+Start by creating the project structure, then implement each feature step-by-step. Ensure the admin panel is hidden from public view — only accessible via /admin/login.
