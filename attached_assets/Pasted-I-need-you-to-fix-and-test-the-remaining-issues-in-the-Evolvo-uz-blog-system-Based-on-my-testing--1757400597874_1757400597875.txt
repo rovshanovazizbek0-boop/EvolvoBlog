@@ -1,0 +1,74 @@
+I need you to fix and test the remaining issues in the "Evolvo.uz" blog system. Based on my testing:
+
+✅ Blog posts are successfully created and visible via /api/blog.
+✅ Scheduler is running and checking every 5 minutes.
+✅ Database is storing posts correctly with title, status, category, and image_unsplash_id.
+
+⚠️ BUT:
+1. 📱 TELEGRAM BOT: Sending posts to Telegram fails with "Bad Request" error.
+2. 🤖 AI GENERATION: Not tested with real Gemini API — only mock data used.
+3. 🖼 UNSPLASH API: Not tested with real Unsplash API — image_unsplash_id is hardcoded.
+4. ⏰ AUTOMATIC TIMES: Not tested with real scheduled times (07:00, 09:00, etc.).
+
+---
+
+## ✅ REQUIRED FIXES & TESTS:
+
+1. 🛠 FIX TELEGRAM BOT "BAD REQUEST" ERROR:
+   - Check `telegram.js` — verify `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHANNEL_ID` in .env.
+   - Ensure `chat_id` is correct (use @username or -100... group ID).
+   - Add error handling and console.log for debugging.
+   - Test with a simple sendMessage API call first.
+
+2. 🤖 TEST AI BLOG GENERATION WITH REAL GEMINI API:
+   - Replace mock AI generation with real Gemini 1.5 Flash API call.
+   - Ensure prompt includes: "Write in Uzbek language, 1000+ words, SEO-friendly, with meta description, keywords, and hashtags."
+   - Test with a real topic: "AI ning kelajagi - Biznes dunyosida yangi imkoniyatlar".
+
+3. 🖼 TEST UNSPLASH API WITH REAL IMAGES:
+   - Replace hardcoded `image_unsplash_id` with real Unsplash API call.
+   - Implement 90-day uniqueness check — query database before fetching new image.
+   - Store real `image_unsplash_id` and `image_url` in database.
+
+4. ⏰ TEST AUTOMATIC SCHEDULING WITH REAL TIMES:
+   - Temporarily change scheduler to run every 1 minute (for testing).
+   - Set a test post with `published_at` = current time + 1 minute.
+   - Verify it gets published and sent to Telegram.
+
+5. 📊 LOGGING & DEBUGGING:
+   - Add console.log messages for:
+     - "Generating AI content for: {title}"
+     - "Fetching image from Unsplash for: {keywords}"
+     - "Sending to Telegram: {title}"
+     - "Error: {error.message}"
+
+---
+
+## 🛠 TECH STACK (same as before):
+- Backend: Express.js
+- Database: PostgreSQL (Replit DB)
+- AI: Google Gemini 1.5 Flash
+- Images: Unsplash API
+- Telegram: Telegram Bot API
+
+---
+
+## 📂 FILES TO REVIEW & FIX:
+- server/utils/telegram.js → Fix Telegram API call
+- server/utils/ai.js → Replace mock with real Gemini API
+- server/utils/unsplash.js → Replace mock with real Unsplash API
+- server/scheduler.js → Test with real times (temporarily every 1 minute)
+- server/cron.js → Test AI + Unsplash generation
+- .env → Verify GEMINI_API_KEY, UNSPLASH_ACCESS_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHANNEL_ID
+
+---
+
+## 🧪 TESTING PLAN:
+1. Run server and wait 1 minute for scheduler to trigger.
+2. Check console.log for AI generation, image fetching, Telegram sending.
+3. Verify post status changes to "published" and telegramPosted = true.
+4. Check Telegram channel for received post.
+
+---
+
+Please fix all issues, implement real API calls, and ensure the entire blog system works end-to-end. Log all steps for debugging.
