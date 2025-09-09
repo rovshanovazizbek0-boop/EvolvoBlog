@@ -18,8 +18,8 @@ export default function Home() {
       <section id="home" className="py-20 bg-gradient-to-br from-background via-muted to-background">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-            AI Powered
-            <span className="gradient-bg bg-clip-text text-transparent"> Business Solutions</span>
+            AI Asosidagi
+            <span className="gradient-bg bg-clip-text text-transparent"> Biznes Yechimlari</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
             Biznesingizni rivojlantirish uchun zamonaviy AI teknologiyalari yordamida professional veb-saytlar, 
