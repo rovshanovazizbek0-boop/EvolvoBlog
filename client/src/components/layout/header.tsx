@@ -41,6 +41,13 @@ export default function Header() {
             >
               Blog
             </Link>
+            <Link 
+              href="/portfolio" 
+              className="text-foreground hover:text-primary transition-colors font-medium"
+              data-testid="nav-portfolio"
+            >
+              Portfolio
+            </Link>
             <a 
               href="#contact" 
               className="text-foreground hover:text-primary transition-colors font-medium"
