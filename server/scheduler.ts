@@ -130,6 +130,7 @@ export async function publishScheduledPosts(): Promise<void> {
               excerpt: post.excerpt,
               slug: post.slug,
               category: post.category,
+              imageUrl: post.imageUrl,
             });
 
             // Mark as posted to Telegram

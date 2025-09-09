@@ -80,6 +80,7 @@ export async function postBlogToTelegram(post: {
   excerpt: string;
   slug: string;
   category: string;
+  imageUrl?: string;
 }): Promise<void> {
   console.log(`📝 Preparing to post blog to Telegram: ${post.title}`);
   console.log(`📢 Channel ID: ${TELEGRAM_CHANNEL_ID}`);
@@ -89,7 +90,7 @@ export async function postBlogToTelegram(post: {
     throw new Error('TELEGRAM_CHANNEL_ID is not configured');
   }
   
-  const message = `📖 <b>${post.title}</b>
+  const caption = `📖 <b>${post.title}</b>
 
 ${post.excerpt}
 
@@ -99,10 +100,59 @@ ${post.excerpt}
 
   try {
     console.log(`📤 Sending to Telegram: ${post.title}`);
-    await sendTelegramMessage(TELEGRAM_CHANNEL_ID, message);
+    
+    if (post.imageUrl) {
+      console.log(`🖼️ Sending with photo: ${post.imageUrl}`);
+      await sendTelegramPhoto(TELEGRAM_CHANNEL_ID, post.imageUrl, caption);
+    } else {
+      console.log(`📝 Sending text only`);
+      await sendTelegramMessage(TELEGRAM_CHANNEL_ID, caption);
+    }
+    
     console.log(`✅ Successfully posted blog to Telegram: ${post.title}`);
   } catch (error) {
     console.error(`❌ Failed to post blog "${post.title}" to Telegram:`, error);
     throw error;
   }
+}
+
+async function sendTelegramPhoto(chatId: string, photoUrl: string, caption: string): Promise<void> {
+  const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`;
+  
+  console.log(`🤖 Sending Telegram photo to: ${chatId}`);
+  console.log(`📱 Bot Token available: ${TELEGRAM_BOT_TOKEN ? 'Yes' : 'No'}`);
+  
+  const payload = {
+    chat_id: chatId,
+    photo: photoUrl,
+    caption: caption,
+    parse_mode: 'HTML',
+    disable_web_page_preview: true
+  };
+
+  const response = await fetch(telegramApiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  console.log(`📡 Telegram API Response Status: ${response.status}`);
+  
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error(`❌ Telegram API Error (${response.status}): ${errorText}`);
+    throw new Error(`Telegram API error: ${response.status} - ${errorText}`);
+  }
+
+  const data = await response.json();
+  console.log(`📡 Telegram API Response:`, data);
+
+  if (!data.ok) {
+    console.error(`❌ Telegram API returned error:`, data);
+    throw new Error(`Telegram API error: ${data.description || 'Unknown error'}`);
+  }
+
+  console.log(`✅ Telegram photo sent successfully to ${chatId}`);
 }
