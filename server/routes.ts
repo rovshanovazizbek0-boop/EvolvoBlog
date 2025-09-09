@@ -103,7 +103,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Submit order
   app.post("/api/orders", async (req, res) => {
     try {
-      const validatedData = insertOrderSchema.parse(req.body);
+      // Convert deadline string to Date if provided
+      const requestBody = {
+        ...req.body,
+        deadline: req.body.deadline ? new Date(req.body.deadline) : undefined,
+      };
+      
+      const validatedData = insertOrderSchema.parse(requestBody);
       
       const order = await storage.createOrder(validatedData);
       
