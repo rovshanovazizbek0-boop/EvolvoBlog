@@ -83,6 +83,52 @@ export default function AdminDashboard() {
     },
   });
 
+  const testSingleBlogMutation = useMutation({
+    mutationFn: async () => {
+      return await apiRequest("POST", "/api/admin/test-single-blog", {});
+    },
+    onSuccess: (data: any) => {
+      toast({
+        title: "Blog yaratildi! ✅",
+        description: `"${data?.post?.title || 'Yangi blog'}" 30 soniyada nashr qilinadi`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Xatolik ❌",
+        description: error.message || "Blog yaratishda xatolik yuz berdi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const testDailyGenerationMutation = useMutation({
+    mutationFn: async () => {
+      return await apiRequest("POST", "/api/admin/test-blog-generation", {});
+    },
+    onSuccess: () => {
+      toast({
+        title: "7 ta blog yaratildi! ✅",
+        description: "Barcha postlar bir necha daqiqada nashr qilinadi",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Xatolik ❌",
+        description: error.message || "Blog yaratishda xatolik yuz berdi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const testSingleBlog = () => {
+    testSingleBlogMutation.mutate();
+  };
+
+  const testDailyGeneration = () => {
+    testDailyGenerationMutation.mutate();
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted">
@@ -225,6 +271,56 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
+        {/* Blog Test Section */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>🧪 Blog Tizimi Sinash</CardTitle>
+            <CardDescription>
+              AI blog yaratish va Telegram yuborishni sinash
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-4">
+              <Button 
+                onClick={() => testSingleBlog()}
+                className="bg-blue-600 hover:bg-blue-700"
+                disabled={testSingleBlogMutation.isPending}
+                data-testid="test-single-blog"
+              >
+                {testSingleBlogMutation.isPending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Yaratilmoqda...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-flask mr-2"></i>
+                    Bitta Blog Sinash
+                  </>
+                )}
+              </Button>
+              <Button 
+                onClick={() => testDailyGeneration()}
+                className="bg-green-600 hover:bg-green-700"
+                disabled={testDailyGenerationMutation.isPending}
+                data-testid="test-daily-generation"
+              >
+                {testDailyGenerationMutation.isPending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Yaratilmoqda...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-calendar-day mr-2"></i>
+                    Kunlik Yaratish Sinash
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Orders Table */}
         <Card>
           <CardHeader>
@@ -277,7 +373,7 @@ export default function AdminDashboard() {
                       
                       <div className="flex items-center space-x-2">
                         <Select
-                          value={order.status}
+                          value={order.status || 'new'}
                           onValueChange={(value) => updateOrderMutation.mutate({ orderId: order.id, status: value || 'new' })}
                           disabled={updateOrderMutation.isPending}
                         >

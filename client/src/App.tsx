@@ -30,6 +30,7 @@ function Router() {
       <Route path="/blog/:slug" component={BlogPost} />
       
       {/* Admin routes */}
+      <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/services" component={AdminServices} />
