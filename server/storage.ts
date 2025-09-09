@@ -5,6 +5,7 @@ import {
   blogPosts,
   clients,
   imageUsage,
+  portfolio,
   type User,
   type InsertUser,
   type Service,
@@ -15,6 +16,8 @@ import {
   type InsertBlogPost,
   type Client,
   type InsertClient,
+  type Portfolio,
+  type InsertPortfolio,
   type ImageUsage,
 } from "@shared/schema";
 import { db } from "./db";
@@ -53,6 +56,14 @@ export interface IStorage {
   createClient(client: InsertClient): Promise<Client>;
   updateClient(id: string, client: Partial<InsertClient>): Promise<Client>;
   getClientByTelegram(telegramUsername: string): Promise<Client | undefined>;
+
+  // Portfolio operations
+  getPortfolioItems(): Promise<Portfolio[]>;
+  getPortfolioItem(id: string): Promise<Portfolio | undefined>;
+  createPortfolioItem(item: InsertPortfolio): Promise<Portfolio>;
+  updatePortfolioItem(id: string, item: Partial<InsertPortfolio>): Promise<Portfolio>;
+  deletePortfolioItem(id: string): Promise<void>;
+  getFeaturedPortfolioItems(): Promise<Portfolio[]>;
 
   // Image tracking
   isImageUsedRecently(unsplashId: string, days: number): Promise<boolean>;
@@ -253,6 +264,53 @@ export class DatabaseStorage implements IStorage {
       .where(gte(imageUsage.usedAt, since));
     
     return usages.map(usage => usage.unsplashId);
+  }
+
+  // Portfolio operations
+  async getPortfolioItems(): Promise<Portfolio[]> {
+    return await db
+      .select()
+      .from(portfolio)
+      .where(eq(portfolio.isPublic, true))
+      .orderBy(desc(portfolio.sortOrder), desc(portfolio.completedAt));
+  }
+
+  async getPortfolioItem(id: string): Promise<Portfolio | undefined> {
+    const [item] = await db.select().from(portfolio).where(eq(portfolio.id, id));
+    return item;
+  }
+
+  async createPortfolioItem(insertItem: InsertPortfolio): Promise<Portfolio> {
+    const [item] = await db.insert(portfolio).values({
+      ...insertItem,
+      updatedAt: new Date(),
+    }).returning();
+    return item;
+  }
+
+  async updatePortfolioItem(id: string, updateData: Partial<InsertPortfolio>): Promise<Portfolio> {
+    const [item] = await db
+      .update(portfolio)
+      .set({
+        ...updateData,
+        updatedAt: new Date(),
+      })
+      .where(eq(portfolio.id, id))
+      .returning();
+    return item;
+  }
+
+  async deletePortfolioItem(id: string): Promise<void> {
+    await db.delete(portfolio).where(eq(portfolio.id, id));
+  }
+
+  async getFeaturedPortfolioItems(): Promise<Portfolio[]> {
+    return await db
+      .select()
+      .from(portfolio)
+      .where(and(eq(portfolio.isPublic, true), eq(portfolio.featured, true)))
+      .orderBy(desc(portfolio.sortOrder), desc(portfolio.completedAt))
+      .limit(6);
   }
 
   // Helper method to upsert client from order
