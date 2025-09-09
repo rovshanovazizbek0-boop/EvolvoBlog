@@ -16,9 +16,13 @@ export async function sendTelegramMessage(chatId: string, message: string): Prom
       }),
     });
 
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error(`Telegram API error: ${response.statusText}`);
+      console.error(`Telegram API error: ${response.statusText}`, data);
+      throw new Error(`Telegram API error: ${response.statusText} - ${data.description || 'Unknown error'}`);
     }
+    
+    console.log(`Telegram message sent successfully to ${chatId}`);
   } catch (error) {
     console.error('Failed to send Telegram message:', error);
     throw error;
@@ -32,19 +36,7 @@ export async function notifyNewOrder(order: {
   serviceTitle: string;
   details: string;
 }): Promise<void> {
-  // Message to client
-  const clientMessage = `
-🎉 <b>Buyurtmangiz qabul qilindi!</b>
-
-Buyurtma ID: <code>${order.id}</code>
-Xizmat: ${order.serviceTitle}
-
-Tez orada siz bilan bog'lanamiz va loyihangizni muhokama qilamiz.
-
-— <b>Evolvo.uz jamoasi</b>
-  `;
-
-  // Message to admin
+  // Message to admin only (client will be contacted manually)
   const adminMessage = `
 🔔 <b>Yangi buyurtma!</b>
 
@@ -52,18 +44,18 @@ Tez orada siz bilan bog'lanamiz va loyihangizni muhokama qilamiz.
 📱 Telegram: @${order.telegramUsername}
 🛍 Xizmat: ${order.serviceTitle}
 📝 Tafsil: ${order.details}
+📧 Buyurtma ID: <code>${order.id}</code>
 
-<a href="https://evolvo.uz/admin/orders/${order.id}">Buyurtmani ko'rish</a>
+<i>Mijoz bilan @${order.telegramUsername} orqali bog'laning</i>
   `;
 
   try {
-    // Send to client
-    await sendTelegramMessage(order.telegramUsername, clientMessage);
-    
-    // Send to admin
+    // Only send to admin channel
     await sendTelegramMessage(TELEGRAM_ADMIN_CHANNEL_ID, adminMessage);
+    console.log(`Order notification sent to admin for order ${order.id}`);
   } catch (error) {
-    console.error('Failed to send order notifications:', error);
+    console.error('Failed to send order notification to admin:', error);
+    throw error;
   }
 }
 
