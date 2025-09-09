@@ -90,18 +90,36 @@ export async function postBlogToTelegram(post: {
     throw new Error('TELEGRAM_CHANNEL_ID is not configured');
   }
   
-  // Limit excerpt to 200 characters to avoid Telegram caption length limit
-  const shortExcerpt = post.excerpt.length > 200 
-    ? post.excerpt.substring(0, 200) + "..." 
+  // Limit excerpt to 150 characters to avoid Telegram caption length limit
+  const shortExcerpt = post.excerpt.length > 150 
+    ? post.excerpt.substring(0, 150) + "..." 
     : post.excerpt;
   
-  const caption = `📖 <b>${post.title}</b>
+  // Create a nicely formatted caption like in the image
+  let caption = `📖 <b>${post.title}</b>
 
 ${shortExcerpt}
 
-<a href="https://evolvo.uz/blog/${post.slug}">To'liq maqolani o'qish ➡️</a>
+<i>"Biznes dunyosidagi eng so'nggi tendensiyalar va texnologiyalar haqida bilib oling."</i>
+
+🔗 <a href="https://evolvo.uz/blog/${post.slug}">To'liq o'qish</a>
 
 #${post.category.replace(/\s+/g, '')} #EvolvoBlog`;
+
+  // Ensure caption is under Telegram's 1024 character limit
+  if (caption.length > 1000) {
+    const veryShortExcerpt = post.excerpt.length > 100 
+      ? post.excerpt.substring(0, 100) + "..." 
+      : post.excerpt;
+    
+    caption = `📖 <b>${post.title}</b>
+
+${veryShortExcerpt}
+
+🔗 <a href="https://evolvo.uz/blog/${post.slug}">To'liq o'qish</a>
+
+#${post.category.replace(/\s+/g, '')} #EvolvoBlog`;
+  }
 
   try {
     console.log(`📤 Sending to Telegram: ${post.title}`);
