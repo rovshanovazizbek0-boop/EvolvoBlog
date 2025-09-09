@@ -159,15 +159,6 @@ export default function AdminLogin() {
               </form>
             </Form>
 
-            <div className="mt-6 pt-6 border-t border-border">
-              <div className="text-sm text-muted-foreground text-center">
-                <p className="mb-2">Demo uchun:</p>
-                <p className="font-mono text-xs bg-muted p-2 rounded">
-                  Email: admin@evolvo.uz<br />
-                  Parol: admin123
-                </p>
-              </div>
-            </div>
           </CardContent>
         </Card>
 
