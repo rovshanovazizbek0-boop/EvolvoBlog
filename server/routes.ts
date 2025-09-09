@@ -46,6 +46,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Start blog scheduler
   startScheduler();
 
+  // Health check endpoint for Render
+  app.get("/api/health", (req, res) => {
+    res.status(200).json({ 
+      status: "OK", 
+      timestamp: new Date().toISOString(),
+      service: "evolvo-uz-api"
+    });
+  });
+
   // Public API routes
 
   // Get all services
