@@ -318,12 +318,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
   if (process.env.NODE_ENV === "development") {
     app.post("/api/admin/test-blog-generation", requireAuth, async (req, res) => {
       try {
-        console.log("Starting test blog post generation...");
+        console.log("🧪 Starting test blog post generation...");
         await generateDailyBlogPosts();
         res.json({ message: "Blog posts generation completed successfully" });
       } catch (error) {
-        console.error("Error in test blog generation:", error);
+        console.error("❌ Error in test blog generation:", error);
         res.status(500).json({ message: "Failed to generate blog posts", error: error instanceof Error ? error.message : String(error) });
+      }
+    });
+
+    // Test single blog post creation
+    app.post("/api/admin/test-single-blog", requireAuth, async (req, res) => {
+      try {
+        const { topic = "AI ning kelajagi - Biznes dunyosida yangi imkoniyatlar" } = req.body;
+        console.log(`🧪 Testing single blog creation for: ${topic}`);
+        
+        // Generate just one blog post for immediate testing
+        const category = "AI va Avtomatlashtirish";
+        const now = new Date();
+        const publishTime = new Date(now.getTime() + 30 * 1000); // 30 seconds from now
+        
+        console.log(`🤖 Generating AI content for: ${topic}`);
+        const { generateBlogPost } = await import("./gemini");
+        const { getImageForBlogPost } = await import("./unsplash");
+        
+        const blogData = await generateBlogPost(topic, category);
+        console.log(`✅ Generated blog content: ${blogData.title}`);
+
+        console.log(`🖼️ Fetching image from Unsplash for: ${category}`);
+        const image = await getImageForBlogPost(category, []);
+        if (!image) {
+          throw new Error("Failed to get image from Unsplash");
+        }
+        console.log(`✅ Got Unsplash image: ${image.id}`);
+
+        // Record image usage
+        await storage.recordImageUsage(image.id);
+
+        // Create slug
+        const slug = topic.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').trim();
+
+        // Save blog post
+        const post = await storage.createBlogPost({
+          title: blogData.title,
+          slug,
+          content: blogData.content,
+          excerpt: blogData.excerpt,
+          metaDescription: blogData.metaDescription,
+          keywords: blogData.keywords,
+          imageUrl: image.urls.regular,
+          imageUnsplashId: image.id,
+          category,
+          readTime: blogData.readTime,
+          publishedAt: publishTime,
+          status: 'scheduled',
+        });
+
+        console.log(`✅ Created test blog post: ${blogData.title}`);
+        res.json({ 
+          message: "Single blog post created successfully", 
+          post: {
+            id: post.id,
+            title: post.title,
+            publishedAt: post.publishedAt,
+            status: post.status
+          }
+        });
+      } catch (error) {
+        console.error("❌ Error creating single blog post:", error);
+        res.status(500).json({ message: "Failed to create blog post", error: error instanceof Error ? error.message : String(error) });
       }
     });
   }
