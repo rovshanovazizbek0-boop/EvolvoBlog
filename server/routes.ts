@@ -6,7 +6,7 @@ import { storage } from "./storage";
 import { generateServiceExplanation } from "./gemini";
 import { notifyNewOrder } from "./telegram";
 import { startScheduler, generateDailyBlogPosts, publishScheduledPosts } from "./scheduler";
-import { insertOrderSchema, insertServiceSchema, insertUserSchema } from "@shared/schema";
+import { insertOrderSchema, insertServiceSchema, insertUserSchema, insertPortfolioSchema } from "@shared/schema";
 
 // Session configuration
 const sessionConfig = {
@@ -156,6 +156,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching blog post:", error);
       res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  // Get all portfolio items
+  app.get("/api/portfolio", async (req, res) => {
+    try {
+      const portfolioItems = await storage.getPortfolioItems();
+      res.json(portfolioItems);
+    } catch (error) {
+      console.error("Error fetching portfolio items:", error);
+      res.status(500).json({ message: "Failed to fetch portfolio items" });
+    }
+  });
+
+  // Get featured portfolio items
+  app.get("/api/portfolio/featured", async (req, res) => {
+    try {
+      const featuredItems = await storage.getFeaturedPortfolioItems();
+      res.json(featuredItems);
+    } catch (error) {
+      console.error("Error fetching featured portfolio items:", error);
+      res.status(500).json({ message: "Failed to fetch featured portfolio items" });
+    }
+  });
+
+  // Get portfolio item by ID
+  app.get("/api/portfolio/:id", async (req, res) => {
+    try {
+      const item = await storage.getPortfolioItem(req.params.id);
+      if (!item) {
+        return res.status(404).json({ message: "Portfolio item not found" });
+      }
+      res.json(item);
+    } catch (error) {
+      console.error("Error fetching portfolio item:", error);
+      res.status(500).json({ message: "Failed to fetch portfolio item" });
     }
   });
 
@@ -311,6 +347,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating client:", error);
       res.status(500).json({ message: "Failed to update client" });
+    }
+  });
+
+  // Admin portfolio management
+  app.get("/api/admin/portfolio", requireAuth, async (req, res) => {
+    try {
+      const portfolioItems = await storage.getPortfolioItems();
+      res.json(portfolioItems);
+    } catch (error) {
+      console.error("Error fetching admin portfolio items:", error);
+      res.status(500).json({ message: "Failed to fetch portfolio items" });
+    }
+  });
+
+  app.post("/api/admin/portfolio", requireAuth, async (req, res) => {
+    try {
+      const requestBody = {
+        ...req.body,
+        completedAt: req.body.completedAt ? new Date(req.body.completedAt) : new Date(),
+      };
+      const validatedData = insertPortfolioSchema.parse(requestBody);
+      const item = await storage.createPortfolioItem(validatedData);
+      res.status(201).json(item);
+    } catch (error) {
+      console.error("Error creating portfolio item:", error);
+      res.status(500).json({ message: "Failed to create portfolio item" });
+    }
+  });
+
+  app.patch("/api/admin/portfolio/:id", requireAuth, async (req, res) => {
+    try {
+      const requestBody = {
+        ...req.body,
+        completedAt: req.body.completedAt ? new Date(req.body.completedAt) : undefined,
+      };
+      const item = await storage.updatePortfolioItem(req.params.id, requestBody);
+      res.json(item);
+    } catch (error) {
+      console.error("Error updating portfolio item:", error);
+      res.status(500).json({ message: "Failed to update portfolio item" });
+    }
+  });
+
+  app.delete("/api/admin/portfolio/:id", requireAuth, async (req, res) => {
+    try {
+      await storage.deletePortfolioItem(req.params.id);
+      res.json({ message: "Portfolio item deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting portfolio item:", error);
+      res.status(500).json({ message: "Failed to delete portfolio item" });
     }
   });
 
