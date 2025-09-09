@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Helmet } from "react-helmet";
+import DownloadPDFButton from "@/components/DownloadPDFButton";
 import type { BlogPost } from "@shared/schema";
 
 export default function BlogPostPage() {
@@ -163,36 +164,42 @@ export default function BlogPostPage() {
               ))}
             </div>
 
-            {/* Share buttons */}
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-muted-foreground">Ulashish:</span>
-              <a 
-                href={`https://t.me/share/url?url=https://evolvo.uz/blog/${typedPost.slug}&text=${encodeURIComponent(typedPost.title)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-primary/80"
-                data-testid="share-telegram"
-              >
-                <i className="fab fa-telegram text-xl"></i>
-              </a>
-              <a 
-                href={`https://www.facebook.com/sharer/sharer.php?u=https://evolvo.uz/blog/${typedPost.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-primary/80"
-                data-testid="share-facebook"
-              >
-                <i className="fab fa-facebook text-xl"></i>
-              </a>
-              <a 
-                href={`https://twitter.com/intent/tweet?url=https://evolvo.uz/blog/${typedPost.slug}&text=${encodeURIComponent(typedPost.title)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-primary/80"
-                data-testid="share-twitter"
-              >
-                <i className="fab fa-twitter text-xl"></i>
-              </a>
+            {/* Download and Share buttons */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <DownloadPDFButton 
+                post={typedPost} 
+                className="bg-green-600 hover:bg-green-700 text-white"
+              />
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-muted-foreground">Ulashish:</span>
+                <a 
+                  href={`https://t.me/share/url?url=https://evolvo.uz/blog/${typedPost.slug}&text=${encodeURIComponent(typedPost.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/80"
+                  data-testid="share-telegram"
+                >
+                  <i className="fab fa-telegram text-xl"></i>
+                </a>
+                <a 
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://evolvo.uz/blog/${typedPost.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/80"
+                  data-testid="share-facebook"
+                >
+                  <i className="fab fa-facebook text-xl"></i>
+                </a>
+                <a 
+                  href={`https://twitter.com/intent/tweet?url=https://evolvo.uz/blog/${typedPost.slug}&text=${encodeURIComponent(typedPost.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/80"
+                  data-testid="share-twitter"
+                >
+                  <i className="fab fa-twitter text-xl"></i>
+                </a>
+              </div>
             </div>
           </footer>
 
