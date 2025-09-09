@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import ServiceCard from "@/components/service-card";
-import type { Service, BlogPost } from "@shared/schema";
+import type { Service, BlogPost, Portfolio } from "@shared/schema";
 
 export default function Home() {
   const { data: services = [], isLoading: servicesLoading } = useQuery({
@@ -10,6 +10,10 @@ export default function Home() {
 
   const { data: blogPosts = [], isLoading: blogLoading } = useQuery({
     queryKey: ["/api/blog?limit=3"],
+  });
+
+  const { data: featuredPortfolio = [], isLoading: portfolioLoading } = useQuery({
+    queryKey: ["/api/portfolio/featured"],
   });
 
   return (
@@ -101,6 +105,122 @@ export default function Home() {
               {(services as Service[]).map((service) => (
                 <ServiceCard key={service.id} service={service} />
               ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section id="portfolio" className="py-20 bg-background">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-foreground mb-4">Bizning portfoliomiz</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Biz yaratgan professional loyihalar va mijozlar uchun muvaffaqiyatli ishlanmalar
+            </p>
+          </div>
+          
+          {portfolioLoading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-card rounded-xl overflow-hidden animate-pulse">
+                  <div className="w-full h-48 bg-muted"></div>
+                  <div className="p-6">
+                    <div className="h-4 bg-muted rounded mb-3"></div>
+                    <div className="h-6 bg-muted rounded mb-3"></div>
+                    <div className="h-4 bg-muted rounded mb-4"></div>
+                    <div className="flex gap-2 mb-4">
+                      <div className="h-6 bg-muted rounded w-16"></div>
+                      <div className="h-6 bg-muted rounded w-20"></div>
+                    </div>
+                    <div className="h-4 bg-muted rounded w-24"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : featuredPortfolio.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {(featuredPortfolio as Portfolio[]).map((item) => (
+                <article key={item.id} className="bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+                  <div className="aspect-video bg-muted overflow-hidden">
+                    <img 
+                      src={item.imageUrl} 
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm text-primary font-medium">{item.category}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(item.completedAt).toLocaleDateString('uz-UZ')}
+                      </span>
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
+                      {item.title}
+                    </h3>
+                    
+                    <p className="text-muted-foreground mb-4 line-clamp-2">
+                      {item.description}
+                    </p>
+                    
+                    {Array.isArray(item.technologies) && item.technologies.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {item.technologies.slice(0, 3).map((tech, i) => (
+                          <span key={i} className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-md">
+                            {tech}
+                          </span>
+                        ))}
+                        {item.technologies.length > 3 && (
+                          <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-md">
+                            +{item.technologies.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center justify-between">
+                      {item.clientName && (
+                        <span className="text-sm text-muted-foreground">
+                          {item.clientName}
+                        </span>
+                      )}
+                      {item.projectUrl && (
+                        <a 
+                          href={item.projectUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1"
+                        >
+                          Ko'rish
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">Tez orada portfoliomiz bilan tanishasiz</p>
+            </div>
+          )}
+          
+          {featuredPortfolio.length > 0 && (
+            <div className="text-center mt-12">
+              <Link href="/portfolio">
+                <button 
+                  className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                  data-testid="all-portfolio-button"
+                >
+                  Barcha loyihalar
+                </button>
+              </Link>
             </div>
           )}
         </div>
