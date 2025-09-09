@@ -58,7 +58,12 @@ export default function OrderForm() {
   const orderMutation = useMutation({
     mutationFn: async (data: OrderFormData) => {
       const { agree, ...orderData } = data;
-      return await apiRequest("POST", "/api/orders", orderData);
+      // Convert deadline string to Date object if provided
+      const processedData = {
+        ...orderData,
+        deadline: orderData.deadline ? new Date(orderData.deadline) : undefined,
+      };
+      return await apiRequest("POST", "/api/orders", processedData);
     },
     onSuccess: () => {
       toast({
