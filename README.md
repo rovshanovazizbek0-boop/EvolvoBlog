@@ -87,18 +87,14 @@ If you prefer manual setup instead of using `render.yaml`:
    - Name: `evolvo-postgres`
    - Plan: Starter (free)
 
-2. **Create Backend Service**
+2. **Create Full-Stack Web Service**
    - New → Web Service
    - Build Command: `npm ci && npm run build`
    - Start Command: `npm start`
    - Add environment variables
-   - Set Health Check Path: `/api/services`
+   - Set Health Check Path: `/api/health`
 
-3. **Create Frontend Service**
-   - New → Static Site
-   - Build Command: `cd client && npm ci && npm run build`
-   - Publish Directory: `client/dist`
-   - Add rewrite rule: `/*` → `/index.html`
+3. **Note**: With the updated configuration, frontend and backend are served from the same service, eliminating the need for separate frontend deployment.
 
 ## 🔑 Getting API Keys
 
