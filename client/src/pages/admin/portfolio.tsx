@@ -60,7 +60,7 @@ export default function AdminPortfolio() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => apiRequest("/api/admin/portfolio", "POST", data),
+    mutationFn: (data: any) => apiRequest("POST", "/api/admin/portfolio", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/portfolio"] });
       setIsDialogOpen(false);
@@ -70,7 +70,7 @@ export default function AdminPortfolio() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => 
-      apiRequest(`/api/admin/portfolio/${id}`, "PATCH", data),
+      apiRequest("PATCH", `/api/admin/portfolio/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/portfolio"] });
       setIsDialogOpen(false);
@@ -80,7 +80,7 @@ export default function AdminPortfolio() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/admin/portfolio/${id}`, "DELETE"),
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/admin/portfolio/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/portfolio"] });
     },
