@@ -85,6 +85,25 @@ export const imageUsage = pgTable("image_usage", {
   usedAt: timestamp("used_at").defaultNow(),
 });
 
+// Portfolio table
+export const portfolio = pgTable("portfolio", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  imageUrl: text("image_url").notNull(),
+  projectUrl: text("project_url"),
+  category: text("category").notNull(),
+  technologies: jsonb("technologies").default([]),
+  clientName: text("client_name"),
+  completedAt: timestamp("completed_at").notNull(),
+  isPublic: boolean("is_public").default(true),
+  featured: boolean("featured").default(false),
+  sortOrder: integer("sort_order").default(0),
+  metaDescription: text("meta_description"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Create schemas for validation
 export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
@@ -115,6 +134,12 @@ export const insertClientSchema = createInsertSchema(clients).omit({
   updatedAt: true,
 });
 
+export const insertPortfolioSchema = createInsertSchema(portfolio).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -130,5 +155,8 @@ export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
 
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
+
+export type Portfolio = typeof portfolio.$inferSelect;
+export type InsertPortfolio = z.infer<typeof insertPortfolioSchema>;
 
 export type ImageUsage = typeof imageUsage.$inferSelect;
