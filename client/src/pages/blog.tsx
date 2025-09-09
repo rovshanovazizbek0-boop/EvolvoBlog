@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import type { BlogPost } from "@shared/schema";
+import { formatDate } from "@/lib/date-utils";
 
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -150,11 +151,7 @@ export default function Blog() {
                     
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">
-                        {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('uz-UZ', {
-                          year: 'numeric',
-                          month: 'long', 
-                          day: 'numeric'
-                        }) : 'Bugun'}
+                        {post.publishedAt ? formatDate(post.publishedAt) : 'Bugun'}
                       </span>
                       <Link 
                         href={`/blog/${post.slug}`} 

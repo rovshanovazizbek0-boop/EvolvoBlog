@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { isUnauthorizedError } from "@/lib/auth-utils";
 import { apiRequest } from "@/lib/queryClient";
 import type { Client, Order } from "@shared/schema";
+import { formatDate } from "@/lib/date-utils";
 
 export default function AdminClients() {
   const [, setLocation] = useLocation();
@@ -283,13 +284,13 @@ export default function AdminClients() {
                       <div className="flex items-center text-sm">
                         <i className="fas fa-calendar mr-2 text-muted-foreground"></i>
                         <span>
-                          {new Date(client.createdAt!).toLocaleDateString('uz-UZ')}
+                          {formatDate(client.createdAt!)}
                         </span>
                       </div>
                       
                       {lastOrder && (
                         <div className="text-sm text-muted-foreground">
-                          So'nggi buyurtma: {new Date(lastOrder.createdAt!).toLocaleDateString('uz-UZ')}
+                          So'nggi buyurtma: {formatDate(lastOrder.createdAt!)}
                         </div>
                       )}
                     </div>
@@ -332,7 +333,7 @@ export default function AdminClients() {
                             <div>
                               <label className="text-sm font-medium text-muted-foreground">Ro'yxatdan o'tgan</label>
                               <p className="text-foreground">
-                                {new Date(client.createdAt!).toLocaleDateString('uz-UZ')}
+                                {formatDate(client.createdAt!)}
                               </p>
                             </div>
                           </div>
@@ -392,7 +393,7 @@ export default function AdminClients() {
                                       {order.details.substring(0, 100)}...
                                     </p>
                                     <div className="flex justify-between text-xs text-muted-foreground">
-                                      <span>{new Date(order.createdAt!).toLocaleDateString('uz-UZ')}</span>
+                                      <span>{formatDate(order.createdAt!)}</span>
                                       {order.budget && <span>{order.budget}</span>}
                                     </div>
                                   </div>

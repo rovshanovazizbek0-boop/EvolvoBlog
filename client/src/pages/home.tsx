@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import ServiceCard from "@/components/service-card";
 import type { Service, BlogPost, Portfolio } from "@shared/schema";
+import { formatDate } from "@/lib/date-utils";
 
 export default function Home() {
   const { data: services = [], isLoading: servicesLoading } = useQuery({
@@ -154,7 +155,7 @@ export default function Home() {
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-sm text-primary font-medium">{item.category}</span>
                       <span className="text-sm text-muted-foreground">
-                        {new Date(item.completedAt).toLocaleDateString('uz-UZ')}
+                        {formatDate(item.completedAt)}
                       </span>
                     </div>
                     
@@ -282,7 +283,7 @@ export default function Home() {
                     
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">
-                        {new Date(post.publishedAt!).toLocaleDateString('uz-UZ')}
+                        {formatDate(post.publishedAt!)}
                       </span>
                       <Link href={`/blog/${post.slug}`} className="text-primary hover:text-primary/80 font-medium">
                         O'qish →

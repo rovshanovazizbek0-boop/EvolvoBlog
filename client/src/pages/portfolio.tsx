@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Portfolio } from "@shared/schema";
 import { Search, ExternalLink, Calendar, User } from "lucide-react";
+import { formatDate } from "@/lib/date-utils";
 
 export default function PortfolioPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -203,7 +204,7 @@ export default function PortfolioPage() {
                       </Badge>
                       <div className="flex items-center text-xs text-muted-foreground">
                         <Calendar className="w-3 h-3 mr-1" />
-                        {new Date(item.completedAt).toLocaleDateString('uz-UZ')}
+                        {formatDate(item.completedAt)}
                       </div>
                     </div>
                     

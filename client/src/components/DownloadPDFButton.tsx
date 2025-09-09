@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import type { BlogPost } from '@shared/schema';
+import { formatDate } from '@/lib/date-utils';
 
 interface DownloadPDFButtonProps {
   post: BlogPost;
@@ -38,11 +39,7 @@ export default function DownloadPDFButton({ post, className = "" }: DownloadPDFB
           </div>
           <h1 style="color: #1F2937; font-size: 28px; margin: 0 0 20px 0; line-height: 1.3;">${post.title}</h1>
           <div style="color: #6B7280; font-size: 14px; margin-bottom: 20px;">
-            <span>${post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('uz-UZ', {
-              year: 'numeric',
-              month: 'long', 
-              day: 'numeric'
-            }) : 'Bugun'}</span> • 
+            <span>${post.publishedAt ? formatDate(post.publishedAt) : 'Bugun'}</span> • 
             <span>${post.readTime} daqiqa o'qish</span> • 
             <span>Evolvo.uz jamoasi</span>
           </div>

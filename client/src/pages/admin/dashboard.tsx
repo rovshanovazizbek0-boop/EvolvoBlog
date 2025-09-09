@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { isUnauthorizedError } from "@/lib/auth-utils";
 import { apiRequest } from "@/lib/queryClient";
 import type { Order, Service } from "@shared/schema";
+import { formatDate } from "@/lib/date-utils";
 
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
@@ -412,7 +413,7 @@ export default function AdminDashboard() {
                       
                       <div>
                         <div className="text-sm text-muted-foreground">
-                          {new Date(order.createdAt!).toLocaleDateString('uz-UZ')}
+                          {formatDate(order.createdAt!)}
                         </div>
                         {order.budget && (
                           <div className="text-sm text-primary font-medium">{order.budget}</div>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Helmet } from "react-helmet";
 import DownloadPDFButton from "@/components/DownloadPDFButton";
 import type { BlogPost } from "@shared/schema";
+import { formatDate } from "@/lib/date-utils";
 
 export default function BlogPostPage() {
   const { slug } = useParams();
@@ -110,11 +111,7 @@ export default function BlogPostPage() {
               <div className="flex items-center space-x-2">
                 <i className="fas fa-calendar"></i>
                 <span data-testid="post-date">
-                  {typedPost.publishedAt ? new Date(typedPost.publishedAt).toLocaleDateString('uz-UZ', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  }) : 'Bugun'}
+                  {typedPost.publishedAt ? formatDate(typedPost.publishedAt) : 'Bugun'}
                 </span>
               </div>
               <div className="flex items-center space-x-2">

@@ -14,6 +14,7 @@ import { z } from "zod";
 import { type Portfolio } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { Trash2, Edit, Plus, ExternalLink, Image as ImageIcon } from "lucide-react";
+import { formatDate } from "@/lib/date-utils";
 
 const portfolioFormSchema = z.object({
   title: z.string().min(1, "Loyiha nomi majburiy"),
@@ -214,7 +215,7 @@ export default function AdminPortfolio() {
                     </div>
                   )}
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span>{new Date(item.completedAt).toLocaleDateString('uz-UZ')}</span>
+                    <span>{formatDate(item.completedAt)}</span>
                     {item.clientName && <span>{item.clientName}</span>}
                   </div>
                   <div className="flex gap-2">
