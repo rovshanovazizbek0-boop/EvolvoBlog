@@ -5,7 +5,7 @@ import session from "express-session";
 import { storage } from "./storage";
 import { generateServiceExplanation } from "./gemini";
 import { notifyNewOrder } from "./telegram";
-import { startScheduler } from "./scheduler";
+import { startScheduler, generateDailyBlogPosts } from "./scheduler";
 import { insertOrderSchema, insertServiceSchema, insertUserSchema } from "@shared/schema";
 
 // Session configuration
@@ -301,6 +301,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to update client" });
     }
   });
+
+  // Test endpoint for generating blog posts (development only)
+  if (process.env.NODE_ENV === "development") {
+    app.post("/api/admin/test-blog-generation", requireAuth, async (req, res) => {
+      try {
+        console.log("Starting test blog post generation...");
+        await generateDailyBlogPosts();
+        res.json({ message: "Blog posts generation completed successfully" });
+      } catch (error) {
+        console.error("Error in test blog generation:", error);
+        res.status(500).json({ message: "Failed to generate blog posts", error: error instanceof Error ? error.message : String(error) });
+      }
+    });
+  }
 
   const httpServer = createServer(app);
   return httpServer;
