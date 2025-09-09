@@ -237,6 +237,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Manual blog generation (admin only)
+  app.post("/api/admin/generate-blog", requireAuth, async (req, res) => {
+    try {
+      const { generateDailyBlogPosts } = await import("./scheduler");
+      await generateDailyBlogPosts();
+      res.json({ message: "Blog posts generated successfully" });
+    } catch (error) {
+      console.error("Error generating blog posts:", error);
+      res.status(500).json({ message: "Failed to generate blog posts" });
+    }
+  });
+
   // Admin services management
   app.get("/api/admin/services", requireAuth, async (req, res) => {
     try {
