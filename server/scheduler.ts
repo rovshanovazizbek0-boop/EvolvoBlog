@@ -26,29 +26,28 @@ function getRandomCategory(): string {
 }
 
 function getScheduledTimes(): Date[] {
-  const times = ['07:00', '09:00', '11:00', '13:00', '15:00', '17:00', '19:00'];
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  return times.map(time => {
-    const [hours, minutes] = time.split(':').map(Number);
-    const scheduledDate = new Date(tomorrow);
-    scheduledDate.setHours(hours, minutes, 0, 0);
-    return scheduledDate;
-  });
+  // For testing: schedule posts 1-7 minutes from now
+  const now = new Date();
+  const times: Date[] = [];
+  
+  for (let i = 1; i <= 7; i++) {
+    const scheduledTime = new Date(now.getTime() + (i * 60 * 1000)); // i minutes from now
+    times.push(scheduledTime);
+  }
+  
+  return times;
 }
 
 export async function generateDailyBlogPosts(): Promise<void> {
   try {
-    console.log('Starting daily blog post generation...');
+    console.log('📅 Starting daily blog post generation...');
 
     // Get used image IDs from last 90 days
     const ninetyDaysAgo = new Date();
     ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
     
-    // This is a simplified version - in production you'd query for used image IDs
-    const usedImageIds: string[] = [];
+    // Get actual used image IDs from database
+    const usedImageIds = await storage.getUsedImageIds(ninetyDaysAgo);
 
     // Generate 7 topics
     const topics = await generateDailyBlogTopics();
@@ -60,17 +59,20 @@ export async function generateDailyBlogPosts(): Promise<void> {
       const scheduledTime = scheduledTimes[i];
 
       try {
-        console.log(`Generating post ${i + 1}: ${topic}`);
+        console.log(`🤖 Generating AI content for: ${topic}`);
 
         // Generate blog content
         const blogData = await generateBlogPost(topic, category);
+        console.log(`✅ Generated blog content: ${blogData.title}`);
 
         // Get unique image
+        console.log(`🖼️ Fetching image from Unsplash for: ${category}`);
         const image = await getImageForBlogPost(category, usedImageIds);
         if (!image) {
-          console.error(`Failed to get image for post: ${topic}`);
+          console.error(`❌ Failed to get image for post: ${topic}`);
           continue;
         }
+        console.log(`✅ Got Unsplash image: ${image.id}`);
 
         // Record image usage
         await storage.recordImageUsage(image.id);
@@ -95,15 +97,15 @@ export async function generateDailyBlogPosts(): Promise<void> {
           status: 'scheduled',
         });
 
-        console.log(`Created scheduled post: ${blogData.title}`);
+        console.log(`✅ Created scheduled post: ${blogData.title}`);
       } catch (error) {
-        console.error(`Failed to create post for topic "${topic}":`, error);
+        console.error(`❌ Error creating post for "${topic}":`, error);
       }
     }
 
-    console.log('Daily blog post generation completed');
+    console.log('✅ Daily blog post generation completed');
   } catch (error) {
-    console.error('Failed to generate daily blog posts:', error);
+    console.error('❌ Failed to generate daily blog posts:', error);
   }
 }
 
@@ -121,20 +123,26 @@ export async function publishScheduledPosts(): Promise<void> {
 
         // Post to Telegram if not already posted
         if (!post.telegramPosted) {
-          await postBlogToTelegram({
-            title: post.title,
-            excerpt: post.excerpt,
-            slug: post.slug,
-            category: post.category,
-          });
+          console.log(`📤 Sending to Telegram: ${post.title}`);
+          try {
+            await postBlogToTelegram({
+              title: post.title,
+              excerpt: post.excerpt,
+              slug: post.slug,
+              category: post.category,
+            });
 
-          // Mark as posted to Telegram
-          await storage.updateBlogPost(post.id, {
-            telegramPosted: true,
-          });
+            // Mark as posted to Telegram
+            await storage.updateBlogPost(post.id, {
+              telegramPosted: true,
+            });
+            console.log(`✅ Successfully sent to Telegram: ${post.title}`);
+          } catch (telegramError) {
+            console.error(`❌ Failed to send to Telegram: ${post.title}`, telegramError);
+          }
         }
 
-        console.log(`Published post: ${post.title}`);
+        console.log(`✅ Published post: ${post.title}`);
       }
     }
   } catch (error) {
@@ -153,10 +161,10 @@ export function startScheduler(): () => void {
     }
   }, 60000); // Check every minute
 
-  // Publish scheduled posts every 5 minutes
+  // Publish scheduled posts every 1 minute (testing mode)
   const publishInterval = setInterval(() => {
     publishScheduledPosts();
-  }, 5 * 60 * 1000); // Every 5 minutes
+  }, 60 * 1000); // Every 1 minute for testing
 
   console.log('Blog scheduler started');
 

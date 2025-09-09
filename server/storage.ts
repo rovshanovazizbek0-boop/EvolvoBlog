@@ -57,6 +57,7 @@ export interface IStorage {
   // Image tracking
   isImageUsedRecently(unsplashId: string, days: number): Promise<boolean>;
   recordImageUsage(unsplashId: string): Promise<void>;
+  getUsedImageIds(since: Date): Promise<string[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -243,6 +244,15 @@ export class DatabaseStorage implements IStorage {
       target: imageUsage.unsplashId,
       set: { usedAt: new Date() },
     });
+  }
+
+  async getUsedImageIds(since: Date): Promise<string[]> {
+    const usages = await db
+      .select({ unsplashId: imageUsage.unsplashId })
+      .from(imageUsage)
+      .where(gte(imageUsage.usedAt, since));
+    
+    return usages.map(usage => usage.unsplashId);
   }
 
   // Helper method to upsert client from order

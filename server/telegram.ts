@@ -4,6 +4,17 @@ const TELEGRAM_ADMIN_CHANNEL_ID = process.env.TELEGRAM_ADMIN_CHANNEL_ID || "";
 
 export async function sendTelegramMessage(chatId: string, message: string): Promise<void> {
   try {
+    console.log(`🤖 Sending Telegram message to: ${chatId}`);
+    console.log(`📱 Bot Token available: ${TELEGRAM_BOT_TOKEN ? 'Yes' : 'No'}`);
+    
+    if (!TELEGRAM_BOT_TOKEN) {
+      throw new Error('TELEGRAM_BOT_TOKEN is not set');
+    }
+    
+    if (!chatId) {
+      throw new Error('Chat ID is empty');
+    }
+    
     const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: {
@@ -13,18 +24,23 @@ export async function sendTelegramMessage(chatId: string, message: string): Prom
         chat_id: chatId,
         text: message,
         parse_mode: 'HTML',
+        disable_web_page_preview: true,
       }),
     });
 
     const data = await response.json();
+    
+    console.log(`📡 Telegram API Response Status: ${response.status}`);
+    console.log(`📡 Telegram API Response:`, data);
+    
     if (!response.ok) {
-      console.error(`Telegram API error: ${response.statusText}`, data);
+      console.error(`❌ Telegram API error: ${response.statusText}`, data);
       throw new Error(`Telegram API error: ${response.statusText} - ${data.description || 'Unknown error'}`);
     }
     
-    console.log(`Telegram message sent successfully to ${chatId}`);
+    console.log(`✅ Telegram message sent successfully to ${chatId}`);
   } catch (error) {
-    console.error('Failed to send Telegram message:', error);
+    console.error('❌ Failed to send Telegram message:', error);
     throw error;
   }
 }
@@ -65,19 +81,28 @@ export async function postBlogToTelegram(post: {
   slug: string;
   category: string;
 }): Promise<void> {
-  const message = `
-📖 <b>${post.title}</b>
+  console.log(`📝 Preparing to post blog to Telegram: ${post.title}`);
+  console.log(`📢 Channel ID: ${TELEGRAM_CHANNEL_ID}`);
+  
+  if (!TELEGRAM_CHANNEL_ID) {
+    console.error('❌ TELEGRAM_CHANNEL_ID is not set');
+    throw new Error('TELEGRAM_CHANNEL_ID is not configured');
+  }
+  
+  const message = `📖 <b>${post.title}</b>
 
 ${post.excerpt}
 
 <a href="https://evolvo.uz/blog/${post.slug}">To'liq o'qish →</a>
 
-#${post.category.replace(/\s+/g, '')} #EvolvoBlog #AI #Technology
-  `;
+#${post.category.replace(/\s+/g, '')} #EvolvoBlog #AI #Technology`;
 
   try {
+    console.log(`📤 Sending to Telegram: ${post.title}`);
     await sendTelegramMessage(TELEGRAM_CHANNEL_ID, message);
+    console.log(`✅ Successfully posted blog to Telegram: ${post.title}`);
   } catch (error) {
-    console.error('Failed to post blog to Telegram:', error);
+    console.error(`❌ Failed to post blog "${post.title}" to Telegram:`, error);
+    throw error;
   }
 }
