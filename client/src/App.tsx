@@ -14,6 +14,7 @@ import AdminLogin from "@/pages/admin/login";
 import AdminDashboard from "@/pages/admin/dashboard";
 import AdminServices from "@/pages/admin/services";
 import AdminClients from "@/pages/admin/clients";
+import AdminPortfolio from "@/pages/admin/portfolio";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import TelegramBanner from "@/components/telegram-banner";
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/services" component={AdminServices} />
       <Route path="/admin/clients" component={AdminClients} />
+      <Route path="/admin/portfolio" component={AdminPortfolio} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />
