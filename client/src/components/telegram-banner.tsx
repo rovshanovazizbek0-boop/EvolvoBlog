@@ -7,13 +7,13 @@ export default function TelegramBanner() {
           <span className="font-medium">Telegram botimiz orqali AI yordamida xizmat tanlang</span>
         </div>
         <a 
-          href="https://t.me/evolvobot" 
+          href="https://t.me/evolvoaiuz_bot" 
           target="_blank" 
           rel="noopener noreferrer"
           className="bg-white text-primary px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
           data-testid="telegram-bot-link"
         >
-          @evolvobot
+          @evolvoaiuz_bot
         </a>
       </div>
     </div>

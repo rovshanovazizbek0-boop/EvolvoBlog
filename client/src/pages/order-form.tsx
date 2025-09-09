@@ -136,7 +136,7 @@ export default function OrderForm() {
                       <FormLabel>Telefon raqam *</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="+998 90 123 45 67" 
+                          placeholder="+998 99 644 84 44" 
                           {...field}
                           data-testid="input-phone"
                         />
