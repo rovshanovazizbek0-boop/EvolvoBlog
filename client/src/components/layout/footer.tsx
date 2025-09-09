@@ -16,7 +16,7 @@ export default function Footer() {
               AI teknologiyalari yordamida biznesingizni rivojlantiring.
             </p>
             <div className="flex space-x-4">
-              <a href="https://t.me/evolvobot" target="_blank" rel="noopener noreferrer" className="text-background/70 hover:text-background" data-testid="footer-telegram">
+              <a href="https://t.me/evolvoaiuz_bot" target="_blank" rel="noopener noreferrer" className="text-background/70 hover:text-background" data-testid="footer-telegram">
                 <i className="fab fa-telegram text-xl"></i>
               </a>
               <a href="#" className="text-background/70 hover:text-background" data-testid="footer-instagram">
@@ -53,7 +53,7 @@ export default function Footer() {
             <ul className="space-y-2 text-background/70">
               <li>
                 <i className="fab fa-telegram mr-2"></i>
-                @evolvobot
+                @evolvoaiuz_bot
               </li>
               <li>
                 <i className="fas fa-envelope mr-2"></i>
@@ -61,7 +61,7 @@ export default function Footer() {
               </li>
               <li>
                 <i className="fas fa-phone mr-2"></i>
-                +998 90 123 45 67
+                +998 99 644 84 44
               </li>
             </ul>
           </div>

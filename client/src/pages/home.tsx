@@ -42,7 +42,7 @@ export default function Home() {
               </button>
             </Link>
             <a 
-              href="https://t.me/evolvobot" 
+              href="https://t.me/evolvoaiuz_bot" 
               target="_blank" 
               rel="noopener noreferrer"
               className="border border-border text-foreground px-8 py-4 rounded-lg font-semibold hover:bg-muted transition-colors inline-block"
@@ -327,12 +327,12 @@ export default function Home() {
               <h3 className="text-lg font-semibold text-foreground mb-2">Telegram</h3>
               <p className="text-muted-foreground mb-4">Tezkor aloqa va maslahat</p>
               <a 
-                href="https://t.me/evolvobot" 
+                href="https://t.me/evolvoaiuz_bot" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:text-primary/80 font-medium"
               >
-                @evolvobot
+                @evolvoaiuz_bot
               </a>
             </div>
             
@@ -357,10 +357,10 @@ export default function Home() {
               <h3 className="text-lg font-semibold text-foreground mb-2">Telefon</h3>
               <p className="text-muted-foreground mb-4">To'g'ridan-to'g'ri aloqa</p>
               <a 
-                href="tel:+998901234567"
+                href="tel:+998996448444"
                 className="text-primary hover:text-primary/80 font-medium"
               >
-                +998 90 123 45 67
+                +998 99 644 84 44
               </a>
             </div>
           </div>
@@ -376,7 +376,7 @@ export default function Home() {
               </button>
             </Link>
             <a 
-              href="https://t.me/evolvobot" 
+              href="https://t.me/evolvoaiuz_bot" 
               target="_blank"
               rel="noopener noreferrer"
               className="border border-border text-foreground px-8 py-4 rounded-lg font-semibold hover:bg-muted transition-colors inline-block"
@@ -410,7 +410,7 @@ export default function Home() {
               </button>
             </Link>
             <a 
-              href="https://t.me/evolvobot" 
+              href="https://t.me/evolvoaiuz_bot" 
               target="_blank"
               rel="noopener noreferrer"
               className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors inline-block"
