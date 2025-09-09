@@ -127,27 +127,116 @@ export default function BlogPostPage() {
               </div>
             </div>
 
-            <p className="text-xl text-muted-foreground leading-relaxed" data-testid="post-excerpt">
-              {typedPost.excerpt}
-            </p>
+            {/* Enhanced excerpt with better styling */}
+            <div className="bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-800/50 dark:to-gray-800/50 rounded-xl p-6 border border-border/50">
+              <p className="text-xl text-muted-foreground leading-relaxed italic font-medium mb-0" data-testid="post-excerpt">
+                <i className="fas fa-quote-left text-primary/40 text-sm mr-2"></i>
+                {typedPost.excerpt}
+                <i className="fas fa-quote-right text-primary/40 text-sm ml-2"></i>
+              </p>
+            </div>
           </header>
 
-          {/* Featured Image */}
-          <div className="mb-8">
-            <img 
-              src={typedPost.imageUrl} 
-              alt={typedPost.title}
-              className="w-full h-64 md:h-96 object-cover rounded-xl"
-            />
+          {/* Featured Image with caption */}
+          <div className="mb-12">
+            <div className="relative group">
+              <img 
+                src={typedPost.imageUrl} 
+                alt={typedPost.title}
+                className="w-full h-64 md:h-96 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <p className="text-center text-sm text-muted-foreground mt-4 italic">
+              {typedPost.category} bo'yicha chiroyli tasvir
+            </p>
           </div>
 
           {/* Article Content */}
-          <div className="prose prose-lg max-w-none mb-12" data-testid="post-content">
-            {typedPost.content.split('\n\n').map((paragraph, index) => (
-              <p key={index} className="mb-6 text-foreground leading-relaxed">
-                {paragraph}
+          <div className="prose prose-lg prose-slate dark:prose-invert max-w-none mb-12" data-testid="post-content">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-l-4 border-primary p-6 rounded-r-lg mb-8">
+              <p className="text-lg text-primary font-medium italic leading-relaxed m-0">
+                "{typedPost.excerpt}"
               </p>
-            ))}
+            </div>
+            
+            <div className="space-y-8 article-content">
+              {typedPost.content.split('\n\n').map((paragraph, index) => {
+                // Check if paragraph looks like a heading (starts with number or is all caps)
+                const isHeading = /^(\d+\.|[A-Z\s]{10,}:)/.test(paragraph.trim());
+                // Check if paragraph is a quote (contains quotes or starts with quote marks)
+                const isQuote = paragraph.includes('"') || paragraph.startsWith('"') || paragraph.startsWith("'");
+                
+                if (isHeading) {
+                  return (
+                    <h3 key={index} className="text-2xl font-bold text-primary mt-12 mb-6 pb-2 border-b-2 border-primary/20">
+                      {paragraph}
+                    </h3>
+                  );
+                }
+                
+                if (isQuote) {
+                  return (
+                    <blockquote key={index} className="bg-muted/50 border-l-4 border-primary p-6 rounded-r-lg my-8">
+                      <p className="text-lg italic text-muted-foreground leading-relaxed mb-0 relative">
+                        <i className="fas fa-quote-left text-primary/30 text-2xl absolute -left-2 -top-2"></i>
+                        <span className="ml-4">{paragraph}</span>
+                      </p>
+                    </blockquote>
+                  );
+                }
+                
+                return (
+                  <p key={index} className="text-lg text-foreground leading-relaxed mb-6 text-justify">
+                    {paragraph.split('.').map((sentence, sentenceIndex) => {
+                      if (sentenceIndex === 0 || sentence.trim().length === 0) {
+                        return sentence + (sentenceIndex < paragraph.split('.').length - 1 ? '.' : '');
+                      }
+                      return (
+                        <span key={sentenceIndex}>
+                          {sentence + (sentenceIndex < paragraph.split('.').length - 1 ? '.' : '')}
+                          {sentenceIndex < paragraph.split('.').length - 2 && sentence.trim().length > 50 && <br className="hidden md:block" />}
+                        </span>
+                      );
+                    })}
+                  </p>
+                );
+              })}
+            </div>
+
+            {/* Key Points Summary */}
+            <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl p-8 mt-12 mb-8">
+              <h3 className="text-xl font-bold text-primary mb-4 flex items-center">
+                <i className="fas fa-lightbulb mr-2"></i>
+                Asosiy xulosalar
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="flex items-start space-x-3">
+                  <i className="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i>
+                  <p className="text-sm text-muted-foreground">
+                    AI va avtomatlashtirish biznesni rivojlantirish uchun kalit vosita
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <i className="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i>
+                  <p className="text-sm text-muted-foreground">
+                    Texnologik yechimlar samaradorlikni oshiradi
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <i className="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i>
+                  <p className="text-sm text-muted-foreground">
+                    Kelajakda raqamli transformatsiya zarur
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <i className="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i>
+                  <p className="text-sm text-muted-foreground">
+                    Professional yordam bilan amalga oshirish mumkin
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Article Footer */}
