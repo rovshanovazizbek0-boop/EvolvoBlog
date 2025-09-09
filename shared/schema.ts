@@ -33,6 +33,7 @@ export const services = pgTable("services", {
 export const orders = pgTable("orders", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   clientName: text("client_name").notNull(),
+  email: text("email").notNull(),
   phone: text("phone").notNull(),
   telegramUsername: text("telegram_username").notNull(),
   serviceId: varchar("service_id").references(() => services.id).notNull(),

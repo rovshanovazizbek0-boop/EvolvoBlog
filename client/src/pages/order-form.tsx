@@ -16,6 +16,7 @@ import type { Service } from "@shared/schema";
 
 const orderSchema = z.object({
   clientName: z.string().min(2, "Ism familiya kamida 2 ta harf bo'lishi kerak"),
+  email: z.string().email("To'g'ri email manzil kiriting"),
   phone: z.string().min(9, "To'g'ri telefon raqam kiriting"),
   telegramUsername: z.string().min(1, "Telegram username kiriting"),
   serviceId: z.string().min(1, "Xizmat turini tanlang"),
@@ -45,6 +46,7 @@ export default function OrderForm() {
     resolver: zodResolver(orderSchema),
     defaultValues: {
       clientName: "",
+      email: "",
       phone: "",
       telegramUsername: "",
       serviceId: preSelectedServiceId || "",
@@ -146,6 +148,25 @@ export default function OrderForm() {
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel>Email manzil *</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="email"
+                        placeholder="email@example.com" 
+                        {...field}
+                        data-testid="input-email"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
