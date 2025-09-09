@@ -67,7 +67,7 @@ export default function DownloadPDFButton({ post, className = "" }: DownloadPDFB
             <h3 style="color: #3B82F6; font-size: 18px; margin: 0 0 10px 0;">Bizning xizmatlarimizdan foydalaning</h3>
             <p style="color: #6B7280; font-size: 14px; margin: 0 0 15px 0;">AI texnologiyalari yordamida biznesingizni rivojlantiring</p>
             <p style="color: #3B82F6; font-size: 14px; font-weight: 600; margin: 0;">
-              🌐 https://evolvo.uz | 📱 @evolvobot | 📧 info@evolvo.uz
+              🌐 https://evolvo.uz | 📱 @evolvoaiuz_bot | 📧 info@evolvo.uz
             </p>
           </div>
         </div>

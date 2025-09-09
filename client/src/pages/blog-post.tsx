@@ -290,7 +290,7 @@ export default function BlogPostPage() {
                 </Button>
               </Link>
               <a 
-                href="https://t.me/evolvobot"
+                href="https://t.me/evolvoaiuz_bot"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors inline-block"

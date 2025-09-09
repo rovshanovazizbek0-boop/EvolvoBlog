@@ -171,7 +171,7 @@ export default function Blog() {
               <p className="text-muted-foreground mb-4">
                 {filteredPosts.length} ta maqola ko'rsatilmoqda
               </p>
-              <Link href="https://t.me/evolvobot" target="_blank" rel="noopener noreferrer">
+              <Link href="https://t.me/evolvoaiuz_bot" target="_blank" rel="noopener noreferrer">
                 <button className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
                   <i className="fab fa-telegram mr-2"></i>
                   Yangiliklar uchun obuna bo'ling
@@ -190,7 +190,7 @@ export default function Blog() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
             <a 
-              href="https://t.me/evolvobot" 
+              href="https://t.me/evolvoaiuz_bot" 
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-block"

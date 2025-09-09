@@ -307,7 +307,7 @@ export default function PortfolioPage() {
               className="border-white text-white hover:bg-white hover:text-primary"
               data-testid="portfolio-cta-contact"
             >
-              <a href="https://t.me/evolvobot" target="_blank" rel="noopener noreferrer">
+              <a href="https://t.me/evolvoaiuz_bot" target="_blank" rel="noopener noreferrer">
                 Biz bilan bog'lanish
               </a>
             </Button>
