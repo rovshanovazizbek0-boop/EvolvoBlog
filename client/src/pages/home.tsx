@@ -187,6 +187,87 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Contact Section */}
+      <section id="contact" className="py-20 bg-background">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold text-foreground mb-6">
+            Biz bilan bog'laning
+          </h2>
+          <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Loyihangiz haqida gaplashish yoki savollar berish uchun bizga murojaat qiling. 
+            Biz har doim sizga yordam berishga tayyormiz!
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="text-center p-6 bg-card rounded-lg border">
+              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
+                <i className="fab fa-telegram text-primary-foreground text-xl"></i>
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Telegram</h3>
+              <p className="text-muted-foreground mb-4">Tezkor aloqa va maslahat</p>
+              <a 
+                href="https://t.me/evolvobot" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 font-medium"
+              >
+                @evolvobot
+              </a>
+            </div>
+            
+            <div className="text-center p-6 bg-card rounded-lg border">
+              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
+                <i className="fas fa-envelope text-primary-foreground text-xl"></i>
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Email</h3>
+              <p className="text-muted-foreground mb-4">Rasmiy murojaat uchun</p>
+              <a 
+                href="mailto:info@evolvo.uz"
+                className="text-primary hover:text-primary/80 font-medium"
+              >
+                info@evolvo.uz
+              </a>
+            </div>
+            
+            <div className="text-center p-6 bg-card rounded-lg border">
+              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
+                <i className="fas fa-phone text-primary-foreground text-xl"></i>
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Telefon</h3>
+              <p className="text-muted-foreground mb-4">To'g'ridan-to'g'ri aloqa</p>
+              <a 
+                href="tel:+998901234567"
+                className="text-primary hover:text-primary/80 font-medium"
+              >
+                +998 90 123 45 67
+              </a>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/order">
+              <button 
+                className="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                data-testid="contact-start-project"
+              >
+                <i className="fas fa-rocket mr-2"></i>
+                Loyihani boshlash
+              </button>
+            </Link>
+            <a 
+              href="https://t.me/evolvobot" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-border text-foreground px-8 py-4 rounded-lg font-semibold hover:bg-muted transition-colors inline-block"
+              data-testid="contact-telegram-button"
+            >
+              <i className="fab fa-telegram mr-2"></i>
+              Telegram'da yozing
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 gradient-bg">
         <div className="max-w-4xl mx-auto px-4 text-center">
