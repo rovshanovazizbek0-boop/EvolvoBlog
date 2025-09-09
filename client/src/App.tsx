@@ -19,6 +19,7 @@ import AdminPortfolio from "@/pages/admin/portfolio";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import TelegramBanner from "@/components/telegram-banner";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 function Router() {
   return (
@@ -58,6 +59,7 @@ function App() {
             <Router />
           </main>
           <Footer />
+          <PWAInstallPrompt />
         </div>
         <Toaster />
       </TooltipProvider>

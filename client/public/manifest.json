@@ -1,0 +1,61 @@
+{
+  "name": "Evolvo.uz - AI Asosidagi Biznes Yechimlari",
+  "short_name": "Evolvo.uz",
+  "description": "AI teknologiyalari yordamida professional veb-saytlar, Telegram botlar va avtomatlashtirish tizimlari yaratish xizmati",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1366D6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "uz",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/pwa-64x64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "AI Chat",
+      "short_name": "Chat",
+      "description": "AI bilan suhbat",
+      "url": "/chat",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Xizmatlar",
+      "short_name": "Xizmatlar",
+      "description": "Bizning xizmatlarimiz",
+      "url": "/services",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Blog",
+      "short_name": "Blog",
+      "description": "Yangi maqolalar",
+      "url": "/blog",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
