@@ -144,8 +144,8 @@ export default function Blog() {
                       </h3>
                     </Link>
                     
-                    <p className="text-muted-foreground mb-4 line-clamp-3">
-                      {post.excerpt}
+                    <p className="text-muted-foreground mb-4 line-clamp-2">
+                      {post.excerpt.length > 150 ? post.excerpt.substring(0, 150) + '...' : post.excerpt}
                     </p>
                     
                     <div className="flex items-center justify-between">

@@ -127,14 +127,6 @@ export default function BlogPostPage() {
               </div>
             </div>
 
-            {/* Enhanced excerpt with better styling */}
-            <div className="bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-800/50 dark:to-gray-800/50 rounded-xl p-6 border border-border/50">
-              <p className="text-xl text-muted-foreground leading-relaxed italic font-medium mb-0" data-testid="post-excerpt">
-                <i className="fas fa-quote-left text-primary/40 text-sm mr-2"></i>
-                {typedPost.excerpt}
-                <i className="fas fa-quote-right text-primary/40 text-sm ml-2"></i>
-              </p>
-            </div>
           </header>
 
           {/* Featured Image with caption */}
@@ -154,11 +146,6 @@ export default function BlogPostPage() {
 
           {/* Article Content */}
           <div className="prose prose-lg prose-slate dark:prose-invert max-w-none mb-12" data-testid="post-content">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-l-4 border-primary p-6 rounded-r-lg mb-8">
-              <p className="text-lg text-primary font-medium italic leading-relaxed m-0">
-                "{typedPost.excerpt}"
-              </p>
-            </div>
             
             <div className="space-y-8 article-content">
               {typedPost.content.split('\n\n').map((paragraph, index) => {

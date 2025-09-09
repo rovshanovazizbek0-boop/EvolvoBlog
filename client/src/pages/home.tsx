@@ -276,8 +276,8 @@ export default function Home() {
                       </h3>
                     </Link>
                     
-                    <p className="text-muted-foreground mb-4">
-                      {post.excerpt}
+                    <p className="text-muted-foreground mb-4 line-clamp-2">
+                      {post.excerpt.length > 120 ? post.excerpt.substring(0, 120) + '...' : post.excerpt}
                     </p>
                     
                     <div className="flex items-center justify-between">
