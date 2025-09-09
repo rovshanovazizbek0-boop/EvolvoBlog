@@ -554,16 +554,19 @@ async function initializeDefaultServices() {
     }
 
     // Create default admin user if none exists
-    const adminUser = await storage.getUserByEmail("admin@evolvo.uz");
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@evolvo.uz";
+    const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+    
+    const adminUser = await storage.getUserByEmail(adminEmail);
     if (!adminUser) {
-      const hashedPassword = await bcrypt.hash("admin123", 10);
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
       await storage.createUser({
-        email: "admin@evolvo.uz",
+        email: adminEmail,
         password: hashedPassword,
         firstName: "Admin",
         lastName: "User",
       });
-      console.log("Default admin user created: admin@evolvo.uz / admin123");
+      console.log(`Default admin user created: ${adminEmail} / ${adminPassword}`);
     }
   } catch (error) {
     console.error("Failed to initialize default data:", error);
