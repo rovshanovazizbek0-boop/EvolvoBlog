@@ -218,6 +218,13 @@ export default function AdminDashboard() {
                   Xizmatlar
                 </button>
                 <button 
+                  onClick={() => setLocation("/admin/portfolio")}
+                  className="text-foreground hover:text-primary transition-colors"
+                  data-testid="nav-portfolio"
+                >
+                  Portfolio
+                </button>
+                <button 
                   onClick={() => setLocation("/admin/clients")}
                   className="text-foreground hover:text-primary transition-colors"
                   data-testid="nav-clients"

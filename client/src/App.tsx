@@ -10,6 +10,7 @@ import ServiceDetail from "@/pages/service-detail";
 import OrderForm from "@/pages/order-form";
 import Blog from "@/pages/blog";
 import BlogPost from "@/pages/blog-post";
+import Portfolio from "@/pages/portfolio";
 import AdminLogin from "@/pages/admin/login";
 import AdminDashboard from "@/pages/admin/dashboard";
 import AdminServices from "@/pages/admin/services";
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/order" component={OrderForm} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/portfolio" component={Portfolio} />
       
       {/* Admin routes */}
       <Route path="/admin" component={AdminDashboard} />
