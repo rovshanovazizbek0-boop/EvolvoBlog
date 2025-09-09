@@ -5,7 +5,7 @@ import session from "express-session";
 import { storage } from "./storage";
 import { generateServiceExplanation } from "./gemini";
 import { notifyNewOrder } from "./telegram";
-import { startScheduler, generateDailyBlogPosts } from "./scheduler";
+import { startScheduler, generateDailyBlogPosts, publishScheduledPosts } from "./scheduler";
 import { insertOrderSchema, insertServiceSchema, insertUserSchema } from "@shared/schema";
 
 // Session configuration
@@ -387,6 +387,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } catch (error) {
         console.error("❌ Error creating single blog post:", error);
         res.status(500).json({ message: "Failed to create blog post", error: error instanceof Error ? error.message : String(error) });
+      }
+    });
+
+    // Publish scheduled posts immediately (for testing)
+    app.post("/api/admin/publish-scheduled", requireAuth, async (req, res) => {
+      try {
+        console.log("🚀 Publishing scheduled posts...");
+        await publishScheduledPosts();
+        res.json({ message: "Scheduled posts published successfully" });
+      } catch (error) {
+        console.error("❌ Error publishing scheduled posts:", error);
+        res.status(500).json({ message: "Failed to publish scheduled posts", error: error instanceof Error ? error.message : String(error) });
       }
     });
   }

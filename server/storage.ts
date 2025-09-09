@@ -18,7 +18,7 @@ import {
   type ImageUsage,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, gte, sql } from "drizzle-orm";
+import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 
 export interface IStorage {
   // User operations
@@ -183,7 +183,7 @@ export class DatabaseStorage implements IStorage {
       .where(
         and(
           eq(blogPosts.status, "scheduled"),
-          gte(blogPosts.publishedAt, new Date())
+          lte(blogPosts.publishedAt, new Date())
         )
       )
       .orderBy(blogPosts.publishedAt);

@@ -129,6 +129,29 @@ export default function AdminDashboard() {
     testDailyGenerationMutation.mutate();
   };
 
+  const publishScheduledMutation = useMutation({
+    mutationFn: async () => {
+      return await apiRequest("POST", "/api/admin/publish-scheduled", {});
+    },
+    onSuccess: () => {
+      toast({
+        title: "Nashr qilindi! ✅",
+        description: "Barcha scheduled postlar nashr qilindi",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Xatolik ❌",
+        description: error.message || "Nashr qilishda xatolik yuz berdi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const publishScheduled = () => {
+    publishScheduledMutation.mutate();
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted">
@@ -314,6 +337,24 @@ export default function AdminDashboard() {
                   <>
                     <i className="fas fa-calendar-day mr-2"></i>
                     Kunlik Yaratish Sinash
+                  </>
+                )}
+              </Button>
+              <Button 
+                onClick={() => publishScheduled()}
+                className="bg-purple-600 hover:bg-purple-700"
+                disabled={publishScheduledMutation.isPending}
+                data-testid="publish-scheduled"
+              >
+                {publishScheduledMutation.isPending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Nashr qilinmoqda...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-paper-plane mr-2"></i>
+                    Scheduled Postlar Nashr Qilish
                   </>
                 )}
               </Button>
