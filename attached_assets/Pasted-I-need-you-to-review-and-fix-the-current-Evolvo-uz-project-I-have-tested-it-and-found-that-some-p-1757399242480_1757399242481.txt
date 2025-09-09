@@ -1,0 +1,98 @@
+I need you to review and fix the current "Evolvo.uz" project. I have tested it and found that some parts are working, but others are not. Please fix all issues and ensure the entire platform works as intended.
+
+Here’s what’s NOT working (based on my testing):
+
+1. 🤖 AI Assistant on Service Detail pages:
+   - AI does not respond to user questions.
+   - AI responses are not in Uzbek language.
+   - AI prompt templates are not stored or used correctly.
+
+2. 📱 Telegram Bot Integration:
+   - After submitting an order, no message is sent to the client or admin channel.
+   - Telegram bot token or channel ID may be misconfigured.
+
+3. 📅 Automatic Blog Posts:
+   - Posts are not being generated at 23:00 for the next day.
+   - Posts are not being published to Telegram at 07:00, 09:00, etc.
+   - Images are repeating — no 90-day uniqueness check.
+
+4. 👨‍💼 Admin Panel:
+   - Login is not working — authentication fails.
+   - Orders are not displayed in the dashboard.
+   - Cannot change order status (New → In Progress → Completed).
+
+5. 🗃 Database Issues:
+   - Orders are not saved to the database after form submission.
+   - Blog posts are not saved with image_unsplash_id for uniqueness tracking.
+
+6. ⚙️ Cron Scheduler:
+   - setInterval functions for daily post generation and publishing are not running or misconfigured.
+
+7. 🌐 SEO & Language:
+   - Some pages lack proper meta tags (title, description).
+   - Some content is not in Uzbek language.
+
+---
+
+## ✅ REQUIRED FIXES:
+
+1. Fix AI Assistant:
+   - Ensure AI responses are in Uzbek.
+   - Store AI prompt templates in the `services` table.
+   - Use Gemini API correctly — check API key and prompt format.
+
+2. Fix Telegram Integration:
+   - Verify `TELEGRAM_BOT_TOKEN` and `TELEGRAM_ADMIN_CHANNEL_ID` in .env.
+   - Test sendMessage API with correct chat_id and parse_mode.
+   - Send confirmation to client AND admin channel.
+
+3. Fix Automatic Blog Posts:
+   - Ensure cron.js runs daily at 23:00 to generate 7 unique posts.
+   - Ensure scheduler.js runs every 2 hours (07:00, 09:00, etc.) to publish posts.
+   - Implement 90-day image uniqueness — store and check `image_unsplash_id`.
+
+4. Fix Admin Panel:
+   - Fix login authentication (bcrypt password hashing).
+   - Display orders in dashboard with status and client info.
+   - Allow admin to update order status.
+
+5. Fix Database:
+   - Ensure orders are saved after form submission.
+   - Ensure blog_posts table includes `image_unsplash_id` and checks for duplicates.
+
+6. Fix Cron Scheduler:
+   - Ensure setInterval is correctly implemented in server.js or cron.js.
+   - Log messages to console for debugging (e.g., “Generating daily posts...”).
+
+7. Fix SEO & Language:
+   - Add missing meta tags to all pages.
+   - Ensure all AI-generated content is in Uzbek.
+
+---
+
+## 🛠 TECH STACK (same as before):
+- Frontend: React + Tailwind CSS
+- Backend: Express.js
+- Database: PostgreSQL (Replit DB)
+- AI: Google Gemini 1.5 Flash
+- Telegram: Telegram Bot API
+- Images: Unsplash API
+- Hosting: Replit
+
+---
+
+## 📂 FILE STRUCTURE TO REVIEW & FIX:
+- client/src/pages/ServiceDetail.jsx → AI Assistant
+- server/routes/order.js → Order submission & Telegram notify
+- server/routes/ai.js → AI explain endpoint
+- server/cron.js → Daily post generation
+- server/scheduler.js → Post publishing
+- server/controllers/orderController.js → Save to DB
+- server/utils/telegram.js → Telegram API
+- server/utils/unsplash.js → Image uniqueness
+- server/models/Order.js → Database model
+- .env → Verify all keys
+
+---
+
+Please review the entire codebase, fix all issues, and ensure the platform works as described. Test each feature after fixing.
