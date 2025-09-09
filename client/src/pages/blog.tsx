@@ -7,7 +7,7 @@ import type { BlogPost } from "@shared/schema";
 
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   const { data: blogPosts = [], isLoading } = useQuery({
     queryKey: ["/api/blog?limit=50"],
@@ -26,7 +26,7 @@ export default function Blog() {
   const filteredPosts = (blogPosts as BlogPost[]).filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !selectedCategory || post.category === selectedCategory;
+    const matchesCategory = selectedCategory === "all" || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -62,7 +62,7 @@ export default function Blog() {
                 <SelectValue placeholder="Kategoriya tanlang" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Barcha kategoriyalar</SelectItem>
+                <SelectItem value="all">Barcha kategoriyalar</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
@@ -98,12 +98,12 @@ export default function Blog() {
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">Hech narsa topilmadi</h3>
             <p className="text-muted-foreground mb-6">
-              {searchTerm || selectedCategory 
+              {searchTerm || (selectedCategory !== "all") 
                 ? "Qidiruv yoki filtr bo'yicha maqolalar topilmadi. Boshqa so'z bilan qidiring."
                 : "Hozircha blog maqolalari mavjud emas."
               }
             </p>
-            {(searchTerm || selectedCategory) && (
+            {(searchTerm || (selectedCategory !== "all")) && (
               <button
                 onClick={() => {
                   setSearchTerm("");
