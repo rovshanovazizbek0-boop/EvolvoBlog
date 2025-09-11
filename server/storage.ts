@@ -6,6 +6,9 @@ import {
   clients,
   imageUsage,
   portfolio,
+  chatConversations,
+  chatMessages,
+  chatLeads,
   type User,
   type InsertUser,
   type Service,
@@ -18,6 +21,12 @@ import {
   type InsertClient,
   type Portfolio,
   type InsertPortfolio,
+  type ChatConversation,
+  type InsertChatConversation,
+  type ChatMessage,
+  type InsertChatMessage,
+  type ChatLead,
+  type InsertChatLead,
   type ImageUsage,
 } from "@shared/schema";
 import { db } from "./db";
@@ -65,6 +74,19 @@ export interface IStorage {
   updatePortfolioItem(id: string, item: Partial<InsertPortfolio>): Promise<Portfolio>;
   deletePortfolioItem(id: string): Promise<void>;
   getFeaturedPortfolioItems(): Promise<Portfolio[]>;
+
+  // Chat operations
+  getChatConversation(sessionId: string): Promise<ChatConversation | undefined>;
+  getChatConversationById(conversationId: string): Promise<ChatConversation | undefined>;
+  createChatConversation(conversation: InsertChatConversation): Promise<ChatConversation>;
+  updateChatConversation(id: string, conversation: Partial<InsertChatConversation>): Promise<ChatConversation>;
+  getChatMessages(conversationId: string): Promise<ChatMessage[]>;
+  createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
+  getChatLeads(): Promise<ChatLead[]>;
+  getChatLead(id: string): Promise<ChatLead | undefined>;
+  createChatLead(lead: InsertChatLead): Promise<ChatLead>;
+  updateChatLead(id: string, lead: Partial<InsertChatLead>): Promise<ChatLead>;
+  getChatLeadByConversation(conversationId: string): Promise<ChatLead | undefined>;
 
   // Image tracking
   isImageUsedRecently(unsplashId: string, days: number): Promise<boolean>;
@@ -320,6 +342,108 @@ export class DatabaseStorage implements IStorage {
       .where(and(eq(portfolio.isPublic, true), eq(portfolio.featured, true)))
       .orderBy(desc(portfolio.sortOrder), desc(portfolio.completedAt))
       .limit(6);
+  }
+
+  // Chat operations
+  async getChatConversation(sessionId: string): Promise<ChatConversation | undefined> {
+    const [conversation] = await db
+      .select()
+      .from(chatConversations)
+      .where(eq(chatConversations.sessionId, sessionId));
+    return conversation;
+  }
+
+  async getChatConversationById(conversationId: string): Promise<ChatConversation | undefined> {
+    const [conversation] = await db
+      .select()
+      .from(chatConversations)
+      .where(eq(chatConversations.id, conversationId));
+    return conversation;
+  }
+
+  async createChatConversation(conversation: InsertChatConversation): Promise<ChatConversation> {
+    const [newConversation] = await db
+      .insert(chatConversations)
+      .values({
+        ...conversation,
+        updatedAt: new Date(),
+      })
+      .returning();
+    return newConversation;
+  }
+
+  async updateChatConversation(id: string, updateData: Partial<InsertChatConversation>): Promise<ChatConversation> {
+    const [conversation] = await db
+      .update(chatConversations)
+      .set({
+        ...updateData,
+        updatedAt: new Date(),
+      })
+      .where(eq(chatConversations.id, id))
+      .returning();
+    return conversation;
+  }
+
+  async getChatMessages(conversationId: string): Promise<ChatMessage[]> {
+    return await db
+      .select()
+      .from(chatMessages)
+      .where(eq(chatMessages.conversationId, conversationId))
+      .orderBy(chatMessages.createdAt);
+  }
+
+  async createChatMessage(message: InsertChatMessage): Promise<ChatMessage> {
+    const [newMessage] = await db
+      .insert(chatMessages)
+      .values(message)
+      .returning();
+    return newMessage;
+  }
+
+  async getChatLeads(): Promise<ChatLead[]> {
+    return await db
+      .select()
+      .from(chatLeads)
+      .orderBy(desc(chatLeads.createdAt));
+  }
+
+  async getChatLead(id: string): Promise<ChatLead | undefined> {
+    const [lead] = await db
+      .select()
+      .from(chatLeads)
+      .where(eq(chatLeads.id, id));
+    return lead;
+  }
+
+  async createChatLead(lead: InsertChatLead): Promise<ChatLead> {
+    const [newLead] = await db
+      .insert(chatLeads)
+      .values({
+        ...lead,
+        updatedAt: new Date(),
+      })
+      .returning();
+    return newLead;
+  }
+
+  async updateChatLead(id: string, updateData: Partial<InsertChatLead>): Promise<ChatLead> {
+    const [lead] = await db
+      .update(chatLeads)
+      .set({
+        ...updateData,
+        updatedAt: new Date(),
+      })
+      .where(eq(chatLeads.id, id))
+      .returning();
+    return lead;
+  }
+
+  async getChatLeadByConversation(conversationId: string): Promise<ChatLead | undefined> {
+    const [lead] = await db
+      .select()
+      .from(chatLeads)
+      .where(eq(chatLeads.conversationId, conversationId));
+    return lead;
   }
 
   // Helper method to upsert client from order

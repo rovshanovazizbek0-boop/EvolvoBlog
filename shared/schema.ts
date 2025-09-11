@@ -105,6 +105,52 @@ export const portfolio = pgTable("portfolio", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Chat conversations table
+export const chatConversations = pgTable("chat_conversations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sessionId: text("session_id").notNull().unique(),
+  clientId: varchar("client_id").references(() => clients.id),
+  clientName: text("client_name"),
+  clientPhone: text("client_phone"),
+  clientTelegram: text("client_telegram"),
+  status: text("status").default("active"), // active, converted, archived
+  leadScore: integer("lead_score").default(0),
+  interestedServices: jsonb("interested_services").default([]),
+  lastMessage: text("last_message"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Chat messages table
+export const chatMessages = pgTable("chat_messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conversationId: varchar("conversation_id").references(() => chatConversations.id).notNull(),
+  content: text("content").notNull(),
+  isUser: boolean("is_user").notNull(),
+  messageType: text("message_type").default("text"), // text, service_card, lead_form, quick_reply
+  metadata: jsonb("metadata").default({}), // for storing service recommendations, form data, etc.
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Chat leads table (extends client information with chat-specific data)
+export const chatLeads = pgTable("chat_leads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conversationId: varchar("conversation_id").references(() => chatConversations.id).notNull(),
+  name: text("name"),
+  phone: text("phone"),
+  telegramUsername: text("telegram_username"),
+  email: text("email"),
+  interestedService: text("interested_service"),
+  budget: text("budget"),
+  timeline: text("timeline"),
+  requirements: text("requirements"),
+  leadQuality: text("lead_quality").default("cold"), // cold, warm, hot
+  status: text("status").default("new"), // new, contacted, converted, lost
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Create schemas for validation
 export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
@@ -141,6 +187,23 @@ export const insertPortfolioSchema = createInsertSchema(portfolio).omit({
   updatedAt: true,
 });
 
+export const insertChatConversationSchema = createInsertSchema(chatConversations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertChatMessageSchema = createInsertSchema(chatMessages).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertChatLeadSchema = createInsertSchema(chatLeads).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -159,5 +222,14 @@ export type InsertClient = z.infer<typeof insertClientSchema>;
 
 export type Portfolio = typeof portfolio.$inferSelect;
 export type InsertPortfolio = z.infer<typeof insertPortfolioSchema>;
+
+export type ChatConversation = typeof chatConversations.$inferSelect;
+export type InsertChatConversation = z.infer<typeof insertChatConversationSchema>;
+
+export type ChatMessage = typeof chatMessages.$inferSelect;
+export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+
+export type ChatLead = typeof chatLeads.$inferSelect;
+export type InsertChatLead = z.infer<typeof insertChatLeadSchema>;
 
 export type ImageUsage = typeof imageUsage.$inferSelect;

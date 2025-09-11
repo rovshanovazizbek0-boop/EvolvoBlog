@@ -20,6 +20,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import TelegramBanner from "@/components/telegram-banner";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import ChatWidget from "@/components/chat-widget";
 
 function Router() {
   return (
@@ -60,6 +61,7 @@ function App() {
           </main>
           <Footer />
           <PWAInstallPrompt />
+          <ChatWidget />
         </div>
         <Toaster />
       </TooltipProvider>

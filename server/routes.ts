@@ -5,10 +5,10 @@ import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import { pool, checkDatabaseHealth } from "./db";
 import { storage } from "./storage";
-import { generateServiceExplanation } from "./gemini";
+import { generateServiceExplanation, generateChatResponse, generateServiceRecommendations } from "./gemini";
 import { notifyNewOrder, validateTelegramConfiguration, getTelegramSetupInstructions, validateTelegramChat } from "./telegram";
 import { startScheduler, generateDailyBlogPosts, publishScheduledPosts, handleGenerateDailyPostsWebhook, handlePublishScheduledWebhook } from "./scheduler";
-import { insertOrderSchema, insertServiceSchema, insertUserSchema, insertPortfolioSchema } from "@shared/schema";
+import { insertOrderSchema, insertServiceSchema, insertUserSchema, insertPortfolioSchema, insertChatConversationSchema, insertChatMessageSchema, insertChatLeadSchema } from "@shared/schema";
 
 // Environment validation for production
 if (process.env.NODE_ENV === "production") {
@@ -302,6 +302,164 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching portfolio item:", error);
       res.status(500).json({ message: "Failed to fetch portfolio item" });
+    }
+  });
+
+  // Chat API endpoints
+
+  // Start or get existing conversation
+  app.post("/api/chat/conversation", async (req, res) => {
+    try {
+      const { sessionId } = req.body;
+      
+      if (!sessionId) {
+        return res.status(400).json({ message: "Session ID is required" });
+      }
+
+      // Check if conversation already exists
+      let conversation = await storage.getChatConversation(sessionId);
+      
+      if (!conversation) {
+        // Create new conversation
+        conversation = await storage.createChatConversation({
+          sessionId,
+          status: "active",
+          leadScore: 0,
+          interestedServices: [],
+        });
+      }
+
+      res.json(conversation);
+    } catch (error) {
+      console.error("Error managing conversation:", error);
+      res.status(500).json({ message: "Failed to manage conversation" });
+    }
+  });
+
+  // Send message and get AI response
+  app.post("/api/chat/message", async (req, res) => {
+    try {
+      const { conversationId, message, messageType = "text", metadata = {} } = req.body;
+
+      if (!conversationId || !message) {
+        return res.status(400).json({ message: "Conversation ID and message are required" });
+      }
+
+      // Verify conversation exists before creating messages (prevent foreign key violations)
+      const existingConversation = await storage.getChatConversationById(conversationId);
+      if (!existingConversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+
+      // Save user message
+      const userMessage = await storage.createChatMessage({
+        conversationId,
+        content: message,
+        isUser: true,
+        messageType,
+        metadata,
+      });
+
+      // Generate AI response
+      const aiResponse = await generateChatResponse(message, conversationId);
+      
+      // Save AI response
+      const aiMessage = await storage.createChatMessage({
+        conversationId,
+        content: aiResponse.content,
+        isUser: false,
+        messageType: aiResponse.messageType || "text",
+        metadata: aiResponse.metadata || {},
+      });
+
+      // Update conversation with last message
+      await storage.updateChatConversation(conversationId, {
+        lastMessage: message,
+        leadScore: aiResponse.leadScore || 0,
+        interestedServices: aiResponse.interestedServices || [],
+      });
+
+      res.json({
+        userMessage,
+        aiMessage,
+        recommendations: aiResponse.recommendations || [],
+        leadForm: aiResponse.leadForm || null,
+      });
+    } catch (error) {
+      console.error("Error processing message:", error);
+      res.status(500).json({ message: "Failed to process message" });
+    }
+  });
+
+  // Get conversation messages
+  app.get("/api/chat/messages/:conversationId", async (req, res) => {
+    try {
+      const messages = await storage.getChatMessages(req.params.conversationId);
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      res.status(500).json({ message: "Failed to fetch messages" });
+    }
+  });
+
+  // Create chat lead
+  app.post("/api/chat/lead", async (req, res) => {
+    try {
+      console.log('🔍 Lead submission debug:', {
+        body: req.body,
+        conversationId: req.body.conversationId
+      });
+      
+      // Validate input data with proper schema
+      const validatedData = insertChatLeadSchema.parse(req.body);
+      console.log('✅ Validated data:', {
+        conversationId: validatedData.conversationId
+      });
+      
+      if (!validatedData.conversationId) {
+        return res.status(400).json({ message: "Conversation ID is required" });
+      }
+
+      // Check if conversation exists before creating lead
+      const conversation = await storage.getChatConversationById(validatedData.conversationId);
+      console.log('🔍 Conversation lookup result:', conversation ? 'FOUND' : 'NOT FOUND');
+      
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+
+      const lead = await storage.createChatLead(validatedData);
+      
+      // Update conversation status if lead is created
+      await storage.updateChatConversation(validatedData.conversationId, {
+        status: "converted",
+        clientName: validatedData.name,
+        clientPhone: validatedData.phone,
+        clientTelegram: validatedData.telegramUsername,
+      });
+
+      res.status(201).json(lead);
+    } catch (error: any) {
+      console.error("Error creating lead:", error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ message: "Invalid lead data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create lead" });
+    }
+  });
+
+  // Get service recommendations
+  app.post("/api/chat/recommendations", async (req, res) => {
+    try {
+      const { requirements, budget, timeline } = req.body;
+      
+      const services = await storage.getServices();
+      const recommendations = await generateServiceRecommendations(services, requirements, budget, timeline);
+      
+      res.json(recommendations);
+    } catch (error) {
+      console.error("Error generating recommendations:", error);
+      res.status(500).json({ message: "Failed to generate recommendations" });
     }
   });
 
