@@ -46,20 +46,16 @@ function serveFallbackHTML(app: Express) {
 
 export async function setupVite(app: Express, server: Server) {
   try {
-    // Dynamic import to avoid top-level import issues
-    const viteMod: any = await import('vite');
-    const createViteServer = viteMod.createServer || viteMod.default?.createServer;
+    // Use dynamic import for Vite with proper destructuring
+    const viteModule = await import('vite');
     
-    if (!createViteServer) {
-      console.error('Vite module structure:', Object.keys(viteMod));
-      console.error('Vite default:', viteMod.default ? Object.keys(viteMod.default) : 'No default');
-      console.warn('Vite development mode failed, serving basic HTML fallback');
-      // Serve basic HTML fallback instead of static build
+    if (!viteModule.createServer) {
+      console.log('Vite dev mode unavailable, serving static HTML fallback');
       serveFallbackHTML(app);
       return;
     }
     
-    const vite = await createViteServer({
+    const vite = await viteModule.createServer({
       configFile: path.resolve(__dirname, '..', 'vite.config.js'),
       server: {
         middlewareMode: true,
