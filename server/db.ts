@@ -24,11 +24,6 @@ export const pool = new Pool({
   idleTimeoutMillis: 30000,
   max: process.env.NODE_ENV === 'production' ? 20 : 10,
   min: process.env.NODE_ENV === 'production' ? 2 : 1,
-  acquireTimeoutMillis: 60000,
-  createTimeoutMillis: 30000,
-  destroyTimeoutMillis: 5000,
-  reapIntervalMillis: 1000,
-  createRetryIntervalMillis: 200,
 });
 
 // Database connection error handling

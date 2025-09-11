@@ -1,0 +1,50 @@
+==> Downloading cache...
+==> Cloning from https://github.com/rovshanovazizbek0-boop/EvolvoBlog
+==> Checking out commit 1551ba417bbea6ffeaa27afb0301b124047edaff in branch main
+==> Transferred 230MB in 8s. Extraction took 7s.
+==> Requesting Node.js version >=18.0.0
+==> Using Node.js version 24.8.0 via /opt/render/project/src/package.json
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm ci && npm run build '...
+added 697 packages, and audited 698 packages in 8s
+84 packages are looking for funding
+  run `npm fund` for details
+5 moderate severity vulnerabilities
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run `npm audit` for details.
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+vite v5.4.20 building for production...
+transforming...
+✓ 2164 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                        3.07 kB │ gzip:   1.17 kB
+../dist/public/assets/index-CF2Uhumf.css        89.12 kB │ gzip:  14.75 kB
+../dist/public/assets/purify.es-CQJ0hv7W.js     21.82 kB │ gzip:   8.58 kB
+../dist/public/assets/index.es-CpTvASHG.js     150.42 kB │ gzip:  51.39 kB
+../dist/public/assets/index-CSI4l-kZ.js      1,513.74 kB │ gzip: 412.76 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 6.60s
+  dist/index.js  58.6kb
+⚡ Done in 7ms
+==> Uploading build...
+==> Uploaded in 7.0s. Compression took 4.3s
+==> Build successful 🎉
+==> Deploying...
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Connecting to database...
+DATABASE_URL is set: true
+NODE_ENV: production
+❌ Missing required environment variables for production: SESSION_SECRET
+==> Exited with status 1
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
