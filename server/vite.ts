@@ -19,16 +19,43 @@ export function log(message: string, source = "express") {
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
+function serveFallbackHTML(app: Express) {
+  console.log('Serving basic HTML fallback for development');
+  app.use("*", async (req, res) => {
+    try {
+      const clientTemplate = path.resolve(
+        __dirname,
+        "..",
+        "client",
+        "index.html"
+      );
+      
+      let template = await fs.readFile(clientTemplate, "utf-8");
+      // Basic development server without Vite transformations
+      template = template.replace(
+        'type="module"',
+        'type="module" data-dev-fallback="true"'
+      );
+      res.status(200).set({ "Content-Type": "text/html" }).end(template);
+    } catch (error) {
+      console.error('Error serving HTML:', error);
+      res.status(500).send('Error loading application');
+    }
+  });
+}
+
 export async function setupVite(app: Express, server: Server) {
   try {
     // Dynamic import to avoid top-level import issues
     const viteMod: any = await import('vite');
-    const createViteServer = viteMod.createServer;
+    const createViteServer = viteMod.createServer || viteMod.default?.createServer;
+    
     if (!createViteServer) {
       console.error('Vite module structure:', Object.keys(viteMod));
-      console.warn('Vite development mode failed, falling back to static serving');
-      // Fallback to static serving if Vite fails
-      serveStatic(app);
+      console.error('Vite default:', viteMod.default ? Object.keys(viteMod.default) : 'No default');
+      console.warn('Vite development mode failed, serving basic HTML fallback');
+      // Serve basic HTML fallback instead of static build
+      serveFallbackHTML(app);
       return;
     }
     
@@ -72,7 +99,8 @@ export async function setupVite(app: Express, server: Server) {
     });
   } catch (error) {
     console.error('Failed to start Vite server:', error);
-    throw error;
+    console.warn('Falling back to basic HTML serving');
+    serveFallbackHTML(app);
   }
 }
 
