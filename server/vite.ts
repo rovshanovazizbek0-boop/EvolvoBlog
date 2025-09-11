@@ -30,8 +30,7 @@ async function buildAndServe(app: Express) {
     
     // Run build command
     await execAsync('npm run build', { 
-      cwd: path.resolve(__dirname, '..'),
-      stdio: 'inherit' 
+      cwd: path.resolve(__dirname, '..')
     });
     
     console.log('Build complete, serving static files...');

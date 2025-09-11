@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === "production") {
 const PostgresStore = connectPgSimple(session);
 
 // Session configuration
-const isHosted = process.env.NODE_ENV === "production" || process.env.REPL_ID; // Replit or production
+const isHosted = !!(process.env.NODE_ENV === "production" || process.env.REPL_ID); // Replit or production
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || "evolvo-secret-key",
   resave: false,
