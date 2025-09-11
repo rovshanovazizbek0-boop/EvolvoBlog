@@ -1,0 +1,111 @@
+
+
+Common filter values
+lcv88
+Press
+enter
+to search
+Syntax tips
+Press
+to navigate options
+
+Sep 11, 8:31 AM - 9:32 AM
+GMT+5
+
+Menu
+
+==> Running 'npm start'
+
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Connecting to database...
+DATABASE_URL is set: true
+NODE_ENV: production
+❌ Database connection attempt 1/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 1000ms...
+Failed to initialize default data: Error: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getServices (file:///opt/render/project/src/dist/index.js:281:16)
+    at async initializeDefaultServices (file:///opt/render/project/src/dist/index.js:1381:30)
+    at async registerRoutes (file:///opt/render/project/src/dist/index.js:977:3)
+    at async file:///opt/render/project/src/dist/index.js:1556:18 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d312ged6ubrc73c1018g-a'
+}
+Blog scheduler started
+4:31:12 AM [express] serving on port 5000
+❌ Database connection attempt 2/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 2000ms...
+❌ Database connection attempt 3/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 4000ms...
+❌ Database connection attempt 4/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 8000ms...
+Error during admin login: Error: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getUserByEmail (file:///opt/render/project/src/dist/index.js:272:24)
+    at async file:///opt/render/project/src/dist/index.js:1140:20 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d312ged6ubrc73c1018g-a'
+}
+4:31:22 AM [express] POST /api/admin/login 500 in 16ms :: {"message":"Login failed"}
+4:31:22 AM [express] GET /api/admin/me 401 in 1ms :: {"message":"Unauthorized"}
+4:31:23 AM [express] GET /api/admin/me 401 in 1ms :: {"message":"Unauthorized"}
+❌ Database connection attempt 5/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+🚨 Failed to connect to database after all retries
+🚨 Critical: Failed to establish database connection: Error: Database connection failed after 5 attempts
+    at connectWithRetry (file:///opt/render/project/src/dist/index.js:195:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Connecting to database...
+DATABASE_URL is set: true
+NODE_ENV: production
+❌ Database connection attempt 1/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 1000ms...
+Failed to initialize default data: Error: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getServices (file:///opt/render/project/src/dist/index.js:281:16)
+    at async initializeDefaultServices (file:///opt/render/project/src/dist/index.js:1381:30)
+    at async registerRoutes (file:///opt/render/project/src/dist/index.js:977:3)
+    at async file:///opt/render/project/src/dist/index.js:1556:18 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d312ged6ubrc73c1018g-a'
+}
+Blog scheduler started
+4:31:41 AM [express] serving on port 5000
+❌ Database connection attempt 2/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 2000ms...
+❌ Database connection attempt 3/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 4000ms...
+Error during admin login: Error: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getUserByEmail (file:///opt/render/project/src/dist/index.js:272:24)
+    at async file:///opt/render/project/src/dist/index.js:1140:20 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d312ged6ubrc73c1018g-a'
+}
+4:31:47 AM [express] POST /api/admin/login 500 in 24ms :: {"message":"Login failed"}
+⏳ Retrying in 8000ms...
+❌ Database connection attempt 4/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+❌ Database connection attempt 5/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+🚨 Failed to connect to database after all retries
+🚨 Critical: Failed to establish database connection: Error: Database connection failed after 5 attempts
+    at connectWithRetry (file:///opt/render/project/src/dist/index.js:195:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
