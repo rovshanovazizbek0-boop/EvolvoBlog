@@ -1,0 +1,147 @@
+==> Downloading cache...
+==> Cloning from https://github.com/rovshanovazizbek0-boop/EvolvoBlog
+==> Checking out commit 1551ba417bbea6ffeaa27afb0301b124047edaff in branch main
+==> Transferred 230MB in 7s. Extraction took 5s.
+==> Requesting Node.js version >=18.0.0
+==> Using Node.js version 24.8.0 via /opt/render/project/src/package.json
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm ci && npm run build '...
+added 697 packages, and audited 698 packages in 7s
+84 packages are looking for funding
+  run `npm fund` for details
+5 moderate severity vulnerabilities
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run `npm audit` for details.
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+vite v5.4.20 building for production...
+transforming...
+✓ 2164 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                        3.07 kB │ gzip:   1.17 kB
+../dist/public/assets/index-CF2Uhumf.css        89.12 kB │ gzip:  14.75 kB
+../dist/public/assets/purify.es-CQJ0hv7W.js     21.82 kB │ gzip:   8.58 kB
+../dist/public/assets/index.es-CpTvASHG.js     150.42 kB │ gzip:  51.39 kB
+../dist/public/assets/index-CSI4l-kZ.js      1,513.74 kB │ gzip: 412.76 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 5.69s
+  dist/index.js  58.6kb
+⚡ Done in 6ms
+==> Uploading build...
+==> Uploaded in 6.4s. Compression took 3.3s
+==> Build successful 🎉
+==> Deploying...
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Connecting to database...
+DATABASE_URL is set: true
+NODE_ENV: production
+❌ Database connection attempt 1/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 1000ms...
+Failed to initialize default data: Error: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getServices (file:///opt/render/project/src/dist/index.js:286:16)
+    at async initializeDefaultServices (file:///opt/render/project/src/dist/index.js:1386:30)
+    at async registerRoutes (file:///opt/render/project/src/dist/index.js:982:3)
+    at async file:///opt/render/project/src/dist/index.js:1561:18 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d312ged6ubrc73c1018g-a'
+}
+Blog scheduler started
+3:54:27 AM [express] serving on port 5000
+❌ Database connection attempt 2/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 2000ms...
+❌ Database connection attempt 3/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 4000ms...
+❌ Database connection attempt 4/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 8000ms...
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://evolvoblog.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
+❌ Database connection attempt 5/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+🚨 Failed to connect to database after all retries
+🚨 Critical: Failed to establish database connection: Error: Database connection failed after 5 attempts
+    at connectWithRetry (file:///opt/render/project/src/dist/index.js:195:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Connecting to database...
+DATABASE_URL is set: true
+NODE_ENV: production
+❌ Database connection attempt 1/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 1000ms...
+Failed to initialize default data: Error: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getServices (file:///opt/render/project/src/dist/index.js:286:16)
+    at async initializeDefaultServices (file:///opt/render/project/src/dist/index.js:1386:30)
+    at async registerRoutes (file:///opt/render/project/src/dist/index.js:982:3)
+    at async file:///opt/render/project/src/dist/index.js:1561:18 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d312ged6ubrc73c1018g-a'
+}
+Blog scheduler started
+3:54:55 AM [express] serving on port 5000
+❌ Database connection attempt 2/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 2000ms...
+❌ Database connection attempt 3/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 4000ms...
+⏳ Retrying in 8000ms...
+❌ Database connection attempt 4/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+❌ Database connection attempt 5/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+🚨 Failed to connect to database after all retries
+🚨 Critical: Failed to establish database connection: Error: Database connection failed after 5 attempts
+    at connectWithRetry (file:///opt/render/project/src/dist/index.js:195:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Connecting to database...
+DATABASE_URL is set: true
+NODE_ENV: production
+❌ Database connection attempt 1/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 1000ms...
+Failed to initialize default data: Error: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getServices (file:///opt/render/project/src/dist/index.js:286:16)
+    at async initializeDefaultServices (file:///opt/render/project/src/dist/index.js:1386:30)
+    at async registerRoutes (file:///opt/render/project/src/dist/index.js:982:3)
+    at async file:///opt/render/project/src/dist/index.js:1561:18 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d312ged6ubrc73c1018g-a'
+}
+Blog scheduler started
+3:55:40 AM [express] serving on port 5000
+❌ Database connection attempt 2/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 2000ms...
+❌ Database connection attempt 3/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 4000ms...
+❌ Database connection attempt 4/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+⏳ Retrying in 8000ms...
+❌ Database connection attempt 5/5 failed: getaddrinfo ENOTFOUND dpg-d312ged6ubrc73c1018g-a
+🚨 Failed to connect to database after all retries
+🚨 Critical: Failed to establish database connection: Error: Database connection failed after 5 attempts
+    at connectWithRetry (file:///opt/render/project/src/dist/index.js:195:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

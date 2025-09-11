@@ -4,10 +4,8 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
-// Trust proxy for Render deployment
-if (process.env.NODE_ENV === "production") {
-  app.set('trust proxy', 1);
-}
+// Trust proxy for all environments (Replit, Render, etc.)
+app.set('trust proxy', 1);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

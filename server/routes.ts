@@ -25,6 +25,7 @@ if (process.env.NODE_ENV === "production") {
 const PostgresStore = connectPgSimple(session);
 
 // Session configuration
+const isHosted = process.env.NODE_ENV === "production" || process.env.REPL_ID; // Replit or production
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || "evolvo-secret-key",
   resave: false,
@@ -37,10 +38,10 @@ const sessionConfig = {
       })
     : undefined, // Use memory store for development
   cookie: {
-    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    secure: isHosted, // Use secure cookies in hosted environments
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: "lax" as const, // Allow cross-site requests
+    sameSite: isHosted ? "none" as const : "lax" as const, // Allow cross-site for hosted
   },
 };
 
@@ -64,7 +65,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // CORS middleware for development
   if (process.env.NODE_ENV === "development") {
     app.use((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+      const origin = req.headers.origin;
+      const allowedOrigins = ['http://localhost:5000', 'https://localhost:5000'];
+      
+      // Allow Replit domains
+      if (origin && (origin.includes('.replit.dev') || origin.includes('.repl.co') || allowedOrigins.includes(origin))) {
+        res.header("Access-Control-Allow-Origin", origin);
+      } else {
+        res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+      }
+      
       res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
       res.header("Access-Control-Allow-Credentials", "true");
