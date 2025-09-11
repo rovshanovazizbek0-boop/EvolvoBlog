@@ -46,6 +46,7 @@ export interface IStorage {
   // Blog operations
   getBlogPosts(limit?: number): Promise<BlogPost[]>;
   getBlogPost(slug: string): Promise<BlogPost | undefined>;
+  getBlogPostsCreatedAfter(date: Date): Promise<BlogPost[]>;
   createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
   updateBlogPost(id: string, post: Partial<InsertBlogPost>): Promise<BlogPost>;
   getScheduledPosts(): Promise<BlogPost[]>;
@@ -171,6 +172,14 @@ export class DatabaseStorage implements IStorage {
   async getBlogPost(slug: string): Promise<BlogPost | undefined> {
     const [post] = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug));
     return post;
+  }
+
+  async getBlogPostsCreatedAfter(date: Date): Promise<BlogPost[]> {
+    return await db
+      .select()
+      .from(blogPosts)
+      .where(gte(blogPosts.createdAt, date))
+      .orderBy(desc(blogPosts.createdAt));
   }
 
   async createBlogPost(insertPost: InsertBlogPost): Promise<BlogPost> {

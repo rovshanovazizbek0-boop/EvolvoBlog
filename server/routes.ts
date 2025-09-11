@@ -7,7 +7,7 @@ import { pool, checkDatabaseHealth } from "./db";
 import { storage } from "./storage";
 import { generateServiceExplanation } from "./gemini";
 import { notifyNewOrder } from "./telegram";
-import { startScheduler, generateDailyBlogPosts, publishScheduledPosts } from "./scheduler";
+import { startScheduler, generateDailyBlogPosts, publishScheduledPosts, handleGenerateDailyPostsWebhook, handlePublishScheduledWebhook } from "./scheduler";
 import { insertOrderSchema, insertServiceSchema, insertUserSchema, insertPortfolioSchema } from "@shared/schema";
 
 // Environment validation for production
@@ -281,6 +281,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching portfolio item:", error);
       res.status(500).json({ message: "Failed to fetch portfolio item" });
+    }
+  });
+
+  // Webhook endpoints for scheduled tasks (public endpoints for external cron services)
+  
+  // Webhook to trigger daily blog post generation
+  app.post("/api/webhooks/generate-daily-posts", async (req, res) => {
+    try {
+      console.log('🎣 Webhook called: Generate daily blog posts');
+      const result = await handleGenerateDailyPostsWebhook();
+      
+      if (result.success) {
+        res.status(200).json(result);
+      } else {
+        res.status(400).json(result);
+      }
+    } catch (error) {
+      console.error('❌ Webhook endpoint error - Generate daily posts:', error);
+      res.status(500).json({
+        success: false,
+        message: `Internal server error: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
+
+  // Webhook to trigger scheduled post publishing
+  app.post("/api/webhooks/publish-scheduled", async (req, res) => {
+    try {
+      console.log('🎣 Webhook called: Publish scheduled posts');
+      const result = await handlePublishScheduledWebhook();
+      
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('❌ Webhook endpoint error - Publish scheduled posts:', error);
+      res.status(500).json({
+        success: false,
+        message: `Internal server error: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
+
+  // Health check endpoint specifically for webhook callers to verify service is awake
+  app.get("/api/webhooks/health", async (req, res) => {
+    try {
+      const dbHealth = await checkDatabaseHealth();
+      res.status(200).json({
+        status: "OK",
+        timestamp: new Date().toISOString(),
+        service: "evolvo-uz-webhooks",
+        scheduler: process.env.NODE_ENV === "production" ? "webhook-mode" : "interval-mode",
+        database: dbHealth.healthy ? "connected" : "disconnected"
+      });
+    } catch (error) {
+      res.status(503).json({
+        status: "SERVICE_UNAVAILABLE",
+        timestamp: new Date().toISOString(),
+        service: "evolvo-uz-webhooks",
+        error: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 
