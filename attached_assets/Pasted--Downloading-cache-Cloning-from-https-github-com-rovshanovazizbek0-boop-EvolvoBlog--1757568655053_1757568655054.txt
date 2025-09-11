@@ -1,0 +1,263 @@
+==> Downloading cache...
+==> Cloning from https://github.com/rovshanovazizbek0-boop/EvolvoBlog
+==> Checking out commit f09bad8cbfccb6571586bc1d22b7fe7810889996 in branch main
+==> Transferred 230MB in 7s. Extraction took 5s.
+==> Requesting Node.js version >=18.0.0
+==> Using Node.js version 24.8.0 via /opt/render/project/src/package.json
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm ci && npm run build '...
+added 697 packages, and audited 698 packages in 8s
+84 packages are looking for funding
+  run `npm fund` for details
+5 moderate severity vulnerabilities
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run `npm audit` for details.
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+vite v5.4.20 building for production...
+transforming...
+✓ 2164 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                        3.07 kB │ gzip:   1.17 kB
+../dist/public/assets/index-CF2Uhumf.css        89.12 kB │ gzip:  14.75 kB
+../dist/public/assets/purify.es-CQJ0hv7W.js     21.82 kB │ gzip:   8.58 kB
+../dist/public/assets/index.es-CpTvASHG.js     150.42 kB │ gzip:  51.39 kB
+../dist/public/assets/index-CSI4l-kZ.js      1,513.74 kB │ gzip: 412.76 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 5.78s
+  dist/index.js  59.9kb
+⚡ Done in 6ms
+==> Uploading build...
+==> Uploaded in 6.2s. Compression took 3.7s
+==> Build successful 🎉
+==> Deploying...
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Connecting to database...
+DATABASE_URL is set: true
+NODE_ENV: production
+🔗 New database connection established
+🔗 New database connection established
+✅ Database connection successful
+Failed to initialize default data: error: relation "services" does not exist
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getServices (file:///opt/render/project/src/dist/index.js:281:16)
+    at async initializeDefaultServices (file:///opt/render/project/src/dist/index.js:1388:30)
+    at async registerRoutes (file:///opt/render/project/src/dist/index.js:984:3)
+    at async file:///opt/render/project/src/dist/index.js:1598:18 {
+  length: 108,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '143',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+Blog scheduler started
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+5:29:01 AM [express] serving on port 5000
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://evolvoblog.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
+5:29:05 AM [express] GET /api/admin/me 401 in 3ms :: {"message":"Unauthorized"}
+Error during admin login: error: relation "users" does not exist
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getUserByEmail (file:///opt/render/project/src/dist/index.js:272:24)
+    at async file:///opt/render/project/src/dist/index.js:1147:20 {
+  length: 105,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '102',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+5:29:16 AM [express] POST /api/admin/login 500 in 4ms :: {"message":"Login failed"}
+🔗 New database connection established
+Error during admin login: error: relation "users" does not exist
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getUserByEmail (file:///opt/render/project/src/dist/index.js:272:24)
+    at async file:///opt/render/project/src/dist/index.js:1147:20 {
+  length: 105,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '102',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+5:29:19 AM [express] POST /api/admin/login 500 in 50ms :: {"message":"Login failed"}
+🔗 New database connection established
+Failed to publish scheduled posts: error: relation "blog_posts" does not exist
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getScheduledPosts (file:///opt/render/project/src/dist/index.js:341:16)
+    at async publishScheduledPosts (file:///opt/render/project/src/dist/index.js:837:28) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '207',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+🔗 New database connection established
+Error during admin login: error: relation "users" does not exist
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getUserByEmail (file:///opt/render/project/src/dist/index.js:272:24)
+    at async file:///opt/render/project/src/dist/index.js:1147:20 {
+  length: 105,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '102',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+5:30:05 AM [express] POST /api/admin/login 500 in 23ms :: {"message":"Login failed"}
+🔗 New database connection established
+Error during admin login: error: relation "users" does not exist
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getUserByEmail (file:///opt/render/project/src/dist/index.js:272:24)
+    at async file:///opt/render/project/src/dist/index.js:1147:20 {
+  length: 105,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '102',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+5:30:07 AM [express] POST /api/admin/login 500 in 16ms :: {"message":"Login failed"}
+🔗 New database connection established
+Error during admin login: error: relation "users" does not exist
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getUserByEmail (file:///opt/render/project/src/dist/index.js:272:24)
+    at async file:///opt/render/project/src/dist/index.js:1147:20 {
+  length: 105,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '102',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+5:30:11 AM [express] POST /api/admin/login 500 in 17ms :: {"message":"Login failed"}
+🔗 New database connection established
+Error during admin login: error: relation "users" does not exist
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getUserByEmail (file:///opt/render/project/src/dist/index.js:272:24)
+    at async file:///opt/render/project/src/dist/index.js:1147:20 {
+  length: 105,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '102',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+5:30:21 AM [express] POST /api/admin/login 500 in 24ms :: {"message":"Login failed"}
