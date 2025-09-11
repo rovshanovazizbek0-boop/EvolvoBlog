@@ -2,19 +2,42 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import bcrypt from "bcrypt";
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
+import { pool, checkDatabaseHealth } from "./db";
 import { storage } from "./storage";
 import { generateServiceExplanation } from "./gemini";
 import { notifyNewOrder } from "./telegram";
 import { startScheduler, generateDailyBlogPosts, publishScheduledPosts } from "./scheduler";
 import { insertOrderSchema, insertServiceSchema, insertUserSchema, insertPortfolioSchema } from "@shared/schema";
 
+// Environment validation for production
+if (process.env.NODE_ENV === "production") {
+  const requiredEnvVars = ['SESSION_SECRET', 'ADMIN_EMAIL', 'ADMIN_PASSWORD'];
+  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+  
+  if (missingVars.length > 0) {
+    console.error(`❌ Missing required environment variables for production: ${missingVars.join(', ')}`);
+    process.exit(1);
+  }
+}
+
+// Session store configuration
+const PostgresStore = connectPgSimple(session);
+
 // Session configuration
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || "evolvo-secret-key",
   resave: false,
   saveUninitialized: false,
+  store: process.env.NODE_ENV === "production" 
+    ? new PostgresStore({
+        pool: pool,
+        tableName: 'session',
+        createTableIfMissing: true,
+      })
+    : undefined, // Use memory store for development
   cookie: {
-    secure: false, // Set to false for development to allow http
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     sameSite: "lax" as const, // Allow cross-site requests
@@ -63,12 +86,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
   startScheduler();
 
   // Health check endpoint for Render
-  app.get("/api/health", (req, res) => {
-    res.status(200).json({ 
-      status: "OK", 
-      timestamp: new Date().toISOString(),
-      service: "evolvo-uz-api"
-    });
+  app.get("/api/health", async (req, res) => {
+    try {
+      const dbHealth = await checkDatabaseHealth();
+      
+      if (dbHealth.healthy) {
+        res.status(200).json({ 
+          status: "OK", 
+          timestamp: new Date().toISOString(),
+          service: "evolvo-uz-api",
+          database: {
+            status: "connected",
+            latency: `${dbHealth.latency}ms`
+          }
+        });
+      } else {
+        res.status(503).json({ 
+          status: "SERVICE_UNAVAILABLE", 
+          timestamp: new Date().toISOString(),
+          service: "evolvo-uz-api",
+          database: {
+            status: "disconnected",
+            error: dbHealth.error,
+            latency: `${dbHealth.latency}ms`
+          }
+        });
+      }
+    } catch (error) {
+      res.status(503).json({ 
+        status: "SERVICE_UNAVAILABLE", 
+        timestamp: new Date().toISOString(),
+        service: "evolvo-uz-api",
+        database: {
+          status: "error",
+          error: error instanceof Error ? error.message : String(error)
+        }
+      });
+    }
   });
 
   // Public API routes
