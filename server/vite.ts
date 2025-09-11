@@ -19,6 +19,32 @@ export function log(message: string, source = "express") {
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
+async function buildAndServe(app: Express) {
+  console.log('Building application for development fallback...');
+  
+  try {
+    // Import child_process
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+    
+    // Run build command
+    await execAsync('npm run build', { 
+      cwd: path.resolve(__dirname, '..'),
+      stdio: 'inherit' 
+    });
+    
+    console.log('Build complete, serving static files...');
+    
+    // Serve the built application
+    serveStatic(app);
+    
+  } catch (error) {
+    console.error('Build failed, serving basic HTML fallback:', error);
+    serveFallbackHTML(app);
+  }
+}
+
 function serveFallbackHTML(app: Express) {
   console.log('Serving basic HTML fallback for development');
   app.use("*", async (req, res) => {
@@ -50,8 +76,8 @@ export async function setupVite(app: Express, server: Server) {
     const viteModule = await import('vite');
     
     if (!viteModule.createServer) {
-      console.log('Vite dev mode unavailable, serving static HTML fallback');
-      serveFallbackHTML(app);
+      console.log('Vite dev mode unavailable, building and serving static files...');
+      await buildAndServe(app);
       return;
     }
     
@@ -95,8 +121,8 @@ export async function setupVite(app: Express, server: Server) {
     });
   } catch (error) {
     console.error('Failed to start Vite server:', error);
-    console.warn('Falling back to basic HTML serving');
-    serveFallbackHTML(app);
+    console.warn('Building and serving static files as fallback...');
+    await buildAndServe(app);
   }
 }
 
