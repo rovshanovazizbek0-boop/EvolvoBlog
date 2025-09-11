@@ -6,7 +6,7 @@ import connectPgSimple from "connect-pg-simple";
 import { pool, checkDatabaseHealth } from "./db";
 import { storage } from "./storage";
 import { generateServiceExplanation } from "./gemini";
-import { notifyNewOrder } from "./telegram";
+import { notifyNewOrder, validateTelegramConfiguration, getTelegramSetupInstructions, validateTelegramChat } from "./telegram";
 import { startScheduler, generateDailyBlogPosts, publishScheduledPosts, handleGenerateDailyPostsWebhook, handlePublishScheduledWebhook } from "./scheduler";
 import { insertOrderSchema, insertServiceSchema, insertUserSchema, insertPortfolioSchema } from "@shared/schema";
 
@@ -88,6 +88,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Session middleware
   app.use(session(sessionConfig));
+
+  // Validate Telegram configuration on startup
+  try {
+    const telegramValidation = await validateTelegramConfiguration();
+    if (!telegramValidation.valid) {
+      console.log('');
+      console.log('⚠️  TELEGRAM CONFIGURATION ISSUES DETECTED:');
+      telegramValidation.errors.forEach(error => console.log(`❌ ${error}`));
+      console.log('');
+      
+      const instructions = getTelegramSetupInstructions();
+      instructions.forEach(instruction => console.log(instruction));
+      console.log('');
+      
+      console.log('📝 Note: Blog posts will still be generated and published to the website, but Telegram posting will be skipped.');
+      console.log('🔧 Fix the above issues to enable Telegram posting.');
+      console.log('');
+    }
+  } catch (error) {
+    console.error('❌ Error during Telegram validation:', error);
+  }
 
   // Initialize default services if none exist
   await initializeDefaultServices();
@@ -636,6 +657,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     });
   }
+
+  // Telegram configuration validation endpoints (available in all environments)
+  app.get("/api/admin/telegram/status", requireAuth, async (req, res) => {
+    try {
+      console.log('🔧 Admin requested Telegram status check');
+      const validation = await validateTelegramConfiguration();
+      
+      res.json({
+        valid: validation.valid,
+        errors: validation.errors,
+        warnings: validation.warnings,
+        instructions: validation.valid ? [] : getTelegramSetupInstructions()
+      });
+    } catch (error) {
+      console.error("❌ Error checking Telegram status:", error);
+      res.status(500).json({ 
+        message: "Failed to check Telegram status", 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
+  app.post("/api/admin/telegram/test", requireAuth, async (req, res) => {
+    try {
+      const { chatType = 'channel' } = req.body; // 'channel' or 'admin'
+      console.log(`🧪 Admin testing ${chatType} chat access`);
+      
+      const channelId = chatType === 'channel' 
+        ? process.env.TELEGRAM_CHANNEL_ID 
+        : process.env.TELEGRAM_ADMIN_CHANNEL_ID;
+      
+      if (!channelId) {
+        return res.status(400).json({ 
+          valid: false,
+          error: `TELEGRAM_${chatType.toUpperCase()}_CHANNEL_ID environment variable is not set`,
+          instructions: getTelegramSetupInstructions()
+        });
+      }
+      
+      const validation = await validateTelegramChat(channelId, chatType as 'channel' | 'admin');
+      
+      if (validation.valid) {
+        res.json({
+          valid: true,
+          message: `Successfully validated ${chatType} chat access`,
+          chatInfo: validation.chatInfo
+        });
+      } else {
+        res.status(400).json({
+          valid: false,
+          error: validation.error,
+          instructions: getTelegramSetupInstructions()
+        });
+      }
+    } catch (error) {
+      console.error("❌ Error testing Telegram chat:", error);
+      res.status(500).json({ 
+        message: "Failed to test Telegram chat", 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

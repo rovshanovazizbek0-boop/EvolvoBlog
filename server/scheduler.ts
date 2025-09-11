@@ -163,6 +163,22 @@ export async function publishScheduledPosts(): Promise<void> {
             console.log(`✅ Successfully sent to Telegram: ${post.title}`);
           } catch (telegramError) {
             console.error(`❌ Failed to send to Telegram: ${post.title}`, telegramError);
+            
+            // Check if it's a configuration issue and provide helpful guidance
+            if (telegramError instanceof Error) {
+              if (telegramError.message.includes('chat not found')) {
+                console.log('💡 Tip: Bot cannot access the Telegram channel. Please ensure:');
+                console.log('   1. The bot is added as an admin to the channel');
+                console.log('   2. The TELEGRAM_CHANNEL_ID is correct');
+                console.log('   3. The bot has permission to post messages');
+                console.log('   Use GET /api/admin/telegram/status to check configuration');
+              } else if (telegramError.message.includes('TELEGRAM_BOT_TOKEN')) {
+                console.log('💡 Tip: Set the TELEGRAM_BOT_TOKEN environment variable');
+              }
+            }
+            
+            // Don't retry posting to prevent spam, just continue with next posts
+            console.log('📝 Note: Blog post was successfully published to website, only Telegram posting failed');
           }
         }
 
