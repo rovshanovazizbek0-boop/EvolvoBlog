@@ -2,7 +2,6 @@ import express, { type Express } from "express";
 import path from "path";
 import fs from "fs/promises";
 import { existsSync } from "fs";
-import { createServer as createViteServer } from "vite";
 import { type Server } from "http";
 import { fileURLToPath } from 'url';
 import { nanoid } from "nanoid";
@@ -22,6 +21,17 @@ export function log(message: string, source = "express") {
 
 export async function setupVite(app: Express, server: Server) {
   try {
+    // Dynamic import to avoid top-level import issues
+    const viteMod: any = await import('vite');
+    const createViteServer = viteMod.createServer;
+    if (!createViteServer) {
+      console.error('Vite module structure:', Object.keys(viteMod));
+      console.warn('Vite development mode failed, falling back to static serving');
+      // Fallback to static serving if Vite fails
+      serveStatic(app);
+      return;
+    }
+    
     const vite = await createViteServer({
       configFile: path.resolve(__dirname, '..', 'vite.config.js'),
       server: {
