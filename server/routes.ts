@@ -407,41 +407,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log('🔍 Lead submission debug:', {
         body: req.body,
-        conversationId: req.body.conversationId
+        conversationId: req.body.conversationId,
+        sessionId: req.body.sessionId
       });
       
-      // Validate input data with proper schema
-      const validatedData = insertChatLeadSchema.parse(req.body);
-      console.log('✅ Validated data:', {
-        conversationId: validatedData.conversationId
+      // Accept both conversationId and sessionId (fallback)
+      const { conversationId, sessionId, ...leadData } = req.body;
+      
+      // If no conversationId but sessionId provided, we'll find/create conversation first
+      let tempConversationId = conversationId;
+      
+      if (!tempConversationId && sessionId) {
+        // Try to find existing conversation by sessionId
+        console.log(`🔍 No conversationId provided, looking up by sessionId: ${sessionId}`);
+        let existingConversation = await storage.getChatConversation(sessionId);
+        
+        if (!existingConversation) {
+          // Create new conversation for this sessionId
+          console.log(`🆕 Creating new conversation for sessionId: ${sessionId}`);
+          existingConversation = await storage.createChatConversation({
+            sessionId,
+            status: "active",
+            leadScore: 0,
+            interestedServices: [],
+          });
+          console.log(`✅ Created new conversation: ${existingConversation.id}`);
+        }
+        
+        tempConversationId = existingConversation.id;
+      }
+      
+      // Validate input data with proper schema - now we have a conversationId
+      const validatedData = insertChatLeadSchema.parse({
+        conversationId: tempConversationId,
+        ...leadData
       });
       
+      console.log('✅ Validated lead data:', {
+        conversationId: validatedData.conversationId,
+        name: validatedData.name,
+        phone: validatedData.phone
+      });
+
+      // Final validation - ensure we have a valid conversationId
       if (!validatedData.conversationId) {
-        return res.status(400).json({ message: "Conversation ID is required" });
+        console.error('❌ No conversationId available after processing. Original conversationId:', conversationId, 'SessionId:', sessionId);
+        return res.status(400).json({ 
+          message: "Cannot associate lead with conversation. Please provide conversationId or sessionId." 
+        });
       }
 
-      // Check if conversation exists before creating lead
+      // Verify the conversation exists
       const conversation = await storage.getChatConversationById(validatedData.conversationId);
-      console.log('🔍 Conversation lookup result:', conversation ? 'FOUND' : 'NOT FOUND');
+      console.log(`🔍 Final conversation verification (${validatedData.conversationId}):`, conversation ? 'FOUND' : 'NOT FOUND');
       
       if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
+        console.error('❌ Conversation verification failed for ID:', validatedData.conversationId);
+        return res.status(500).json({ message: "Failed to verify conversation" });
       }
 
+      console.log(`🎯 Creating lead for conversation: ${conversation.id}`);
       const lead = await storage.createChatLead(validatedData);
+      console.log(`✅ Lead created successfully:`, lead.id);
       
       // Update conversation status if lead is created
-      await storage.updateChatConversation(validatedData.conversationId, {
+      await storage.updateChatConversation(conversation.id, {
         status: "converted",
         clientName: validatedData.name,
         clientPhone: validatedData.phone,
         clientTelegram: validatedData.telegramUsername,
       });
+      console.log(`📝 Updated conversation status to converted`);
 
       res.status(201).json(lead);
     } catch (error: any) {
-      console.error("Error creating lead:", error);
+      console.error("❌ Error creating lead:", error);
       if (error.name === 'ZodError') {
+        console.error("❌ Validation errors:", error.errors);
         return res.status(400).json({ message: "Invalid lead data", errors: error.errors });
       }
       res.status(500).json({ message: "Failed to create lead" });

@@ -193,6 +193,7 @@ export default function ChatWidget() {
     try {
       await apiRequest("POST", "/api/chat/lead", {
         conversationId: conversation.id,
+        sessionId: sessionId, // Send sessionId as fallback
         name: leadFormData.name,
         phone: leadFormData.phone,
         telegramUsername: leadFormData.telegramUsername,
