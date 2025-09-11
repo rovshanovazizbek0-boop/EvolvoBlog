@@ -1,0 +1,104 @@
+==> Cloning from https://github.com/rovshanovazizbek0-boop/EvolvoBlog
+==> Checking out commit dfbdb007d82a05eefd238e06a067d6077f890e78 in branch main
+==> Requesting Node.js version >=18.0.0
+==> Using Node.js version 24.8.0 via /opt/render/project/src/package.json
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm ci && npm run build '...
+added 551 packages, and audited 552 packages in 14s
+72 packages are looking for funding
+  run `npm fund` for details
+10 vulnerabilities (3 low, 7 moderate)
+To address issues that do not require attention, run:
+  npm audit fix
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run `npm audit` for details.
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+vite v5.4.20 building for production...
+transforming...
+Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2152 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                        3.07 kB │ gzip:   1.17 kB
+../dist/public/assets/index-0AsR9ZrU.css        89.43 kB │ gzip:  14.76 kB
+../dist/public/assets/purify.es-BFmuJLeH.js     21.93 kB │ gzip:   8.62 kB
+../dist/public/assets/index.es-DNirXGvs.js     150.53 kB │ gzip:  51.48 kB
+../dist/public/assets/index-Y60xdPyh.js      1,542.73 kB │ gzip: 421.66 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 7.26s
+▲ [WARNING] Import "createServer" will always be undefined because the file "vite" has no exports [import-is-undefined]
+    server/vite.ts:5:9:
+      5 │ import { createServer as createViteServer } from "vite";
+        ╵          ~~~~~~~~~~~~
+1 warning
+  dist/index.js  52.3kb
+⚡ Done in 41ms
+==> Uploading build...
+==> Uploaded in 8.7s. Compression took 45.3s
+==> Build successful 🎉
+==> Deploying...
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Warning: connect.session() MemoryStore is not
+designed for a production environment, as it will leak
+memory, and will not scale past a single process.
+Failed to initialize default data: Error: getaddrinfo ENOTFOUND dpg-d2mk200gjchc73cnvbig-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getServices (file:///opt/render/project/src/dist/index.js:202:16)
+    at async initializeDefaultServices (file:///opt/render/project/src/dist/index.js:1232:30)
+    at async registerRoutes (file:///opt/render/project/src/dist/index.js:858:3)
+    at async file:///opt/render/project/src/dist/index.js:1395:18 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d2mk200gjchc73cnvbig-a'
+}
+Blog scheduler started
+file:///opt/render/project/src/dist/index.js:1355
+  if (!fs.existsSync(distPath)) {
+          ^
+TypeError: fs.existsSync is not a function
+    at serveStatic (file:///opt/render/project/src/dist/index.js:1355:11)
+    at file:///opt/render/project/src/dist/index.js:1405:5
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Node.js v24.8.0
+==> Exited with status 1
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+==> Running 'npm start'
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+Warning: connect.session() MemoryStore is not
+designed for a production environment, as it will leak
+memory, and will not scale past a single process.
+Failed to initialize default data: Error: getaddrinfo ENOTFOUND dpg-d2mk200gjchc73cnvbig-a
+    at /opt/render/project/src/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///opt/render/project/src/node_modules/drizzle-orm/node-postgres/session.js:83:22
+    at async DatabaseStorage.getServices (file:///opt/render/project/src/dist/index.js:202:16)
+    at async initializeDefaultServices (file:///opt/render/project/src/dist/index.js:1232:30)
+    at async registerRoutes (file:///opt/render/project/src/dist/index.js:858:3)
+    at async file:///opt/render/project/src/dist/index.js:1395:18 {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'dpg-d2mk200gjchc73cnvbig-a'
+}
+Blog scheduler started
+file:///opt/render/project/src/dist/index.js:1355
+  if (!fs.existsSync(distPath)) {
+          ^
+TypeError: fs.existsSync is not a function
+    at serveStatic (file:///opt/render/project/src/dist/index.js:1355:11)
+    at file:///opt/render/project/src/dist/index.js:1405:5
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Node.js v24.8.0
