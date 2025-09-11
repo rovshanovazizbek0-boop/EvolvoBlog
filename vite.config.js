@@ -31,7 +31,15 @@ export default defineConfig({
       strict: true,
       allow: ['..']
     },
-    allowedHosts: 'all'
+    allowedHosts: 'all',
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+        ws: true
+      }
+    }
   },
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
