@@ -9,11 +9,11 @@ const __dirname = path.dirname(__filename);
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
-    open: true,
+    port: 5000,
+    host: '0.0.0.0',
     strictPort: true,
     hmr: {
-      clientPort: 3000
+      clientPort: 5000
     },
     watch: {
       usePolling: true,

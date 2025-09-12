@@ -18,10 +18,10 @@ export default defineConfig({
   root: path.resolve(__dirname, "client"),
   server: {
     host: '0.0.0.0',
-    port: 3000,
+    port: 5000,
     strictPort: true,
     hmr: {
-      clientPort: 3000,
+      clientPort: 5000,
       overlay: true
     },
     watch: {
@@ -31,15 +31,7 @@ export default defineConfig({
       strict: true,
       allow: ['..']
     },
-    allowedHosts: 'all',
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        secure: false,
-        ws: true
-      }
-    }
+    allowedHosts: true
   },
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
